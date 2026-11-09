@@ -1,0 +1,49 @@
+name: Build · test · deploy to swipe.yeete.ai
+
+on:
+  push:
+    branches: [main]
+    paths: ["web/**"]   # app changes deploy automatically; anything else → Actions → Run workflow
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults: { run: { working-directory: web } }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm, cache-dependency-path: web/package-lock.json }
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - name: Install Playwright (test browser)
+        run: npm ci && npx playwright install --with-deps chromium
+      - name: Build reposwipe.html + static site (OG stubs for 73 packs, privacy, sitemap, CNAME)
+        run: python3 build.py --site
+        env: { REPOSWIPE_ORIGIN: "https://swipe.yeete.ai" }
+      - name: End-to-end suite (122 checks; must be green to deploy)
+        run: node test.js
+      - name: Attach reposwipe.html (Hostinger / native app sync)
+        uses: actions/upload-artifact@v4
+        with: { name: reposwipe-html, path: web/reposwipe.html, retention-days: 30 }
+      - uses: actions/upload-pages-artifact@v3
+        with: { path: web/site }
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
