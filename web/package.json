@@ -1,0 +1,15 @@
+{
+  "name": "reposwipe-web",
+  "version": "9.0.0",
+  "private": true,
+  "description": "RepoSwipe — single-file web app. build.py assembles reposwipe.html; test.js is the Playwright e2e suite.",
+  "scripts": {
+    "build": "python3 build.py",
+    "site": "python3 build.py --site",
+    "test": "python3 build.py && node test.js",
+    "serve": "python3 -m http.server 8080 --directory site"
+  },
+  "devDependencies": {
+    "playwright": "1.65.0"
+  }
+}

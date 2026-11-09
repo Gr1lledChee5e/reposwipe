@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+  body{width:300px;margin:0;background:#0a0718;color:#EDE9FE;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;font-size:13px}
+  .wrap{padding:14px}
+  .logo{display:flex;align-items:center;gap:8px;font-weight:900;font-size:17px;letter-spacing:-.4px;background:linear-gradient(90deg,#C084FC,#8B5CF6);-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:10px}
+  .logo img{width:22px;height:22px;border-radius:6px}
+  .repo{background:rgba(30,26,54,.8);border:1px solid rgba(167,139,250,.25);border-radius:12px;padding:10px 12px;margin-bottom:10px}
+  .repo .n{font-weight:800;font-size:14px;word-break:break-all}
+  .repo .s{color:#7A6FA8;font-size:11px;margin-top:2px}
+  .btn{display:flex;align-items:center;gap:8px;width:100%;box-sizing:border-box;border:1px solid rgba(167,139,250,.25);background:rgba(30,26,54,.6);color:#EDE9FE;font-weight:700;font-size:13px;padding:10px 12px;border-radius:10px;cursor:pointer;margin-top:6px;text-align:left}
+  .btn:hover{background:rgba(139,92,246,.25)}
+  .btn.primary{background:linear-gradient(135deg,#8B5CF6,#C026D3);border:none}
+  .btn:disabled{opacity:.4;cursor:default}
+  .btn svg{width:16px;height:16px;flex-shrink:0}
+  .sec{color:#7A6FA8;font-size:10px;font-weight:800;letter-spacing:1.2px;margin:14px 0 4px}
+  input{width:100%;box-sizing:border-box;background:rgba(8,6,20,.6);border:1px solid rgba(167,139,250,.25);border-radius:8px;color:#EDE9FE;font-size:12px;padding:8px 10px;outline:none;font-family:ui-monospace,Menlo,monospace}
+  .hint{color:#7A6FA8;font-size:10.5px;line-height:1.5;margin-top:6px}
+  .hint a{color:#C084FC}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="logo"><img src="icons/icon48.png" alt="">RepoSwipe</div>
+  <div class="repo" id="repoBox" style="display:none"><div class="n" id="repoName"></div><div class="s">this tab's GitHub repo</div></div>
+  <button class="btn primary" id="addBtn" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21.2l7.8-7.8 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg><span id="addLabel">Swipe this repo into my Stack</span></button>
+  <button class="btn" id="cardBtn" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="3"/><path d="M9 7h6"/><path d="M9 11h6"/></svg>See it as a card</button>
+  <div class="sec">REPOSWIPE</div>
+  <button class="btn" id="openBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.07-2.14-.22-4.05 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.15.43-2.29 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>Open RepoSwipe</button>
+  <button class="btn" id="packsBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13"/><path d="M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7"/><path d="M7.5 8a2.5 2.5 0 0 1 0-5C9.5 3 11 5 12 8c1-3 2.5-5 4.5-5a2.5 2.5 0 0 1 0 5"/></svg>Starter Packs for your job</button>
+  <div class="sec">SETTINGS</div>
+  <input id="origin" placeholder="https://swipe.yeete.ai" spellcheck="false">
+  <div class="hint">Where RepoSwipe lives. Leave as is unless you self-host. Right-click any GitHub link to swipe it from anywhere. <a href="https://swipe.yeete.ai/privacy.html" target="_blank" rel="noopener">Privacy</a></div>
+</div>
+<script src="common.js"></script>
+<script src="popup.js"></script>
+</body>
+</html>
