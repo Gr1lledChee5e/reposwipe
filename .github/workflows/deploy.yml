@@ -4,6 +4,8 @@ on:
   push:
     branches: [main]
     paths: ["web/**"]   # app changes deploy automatically; anything else → Actions → Run workflow
+  schedule:
+    - cron: "23 * * * *"   # hourly: refresh the snapshot feed (data/*.json) and republish
   workflow_dispatch:
 
 permissions:
@@ -27,10 +29,14 @@ jobs:
         with: { python-version: "3.12" }
       - name: Install Playwright (test browser)
         run: npm ci && npx playwright install --with-deps chromium
-      - name: Build reposwipe.html + static site (OG stubs for 73 packs, privacy, sitemap, CNAME)
+      - name: Snapshot feed — every channel, the Awesome lists and all 73 packs → data/*.json
+        run: python3 snapshot.py
+        env: { GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}", REPOSWIPE_ORIGIN: "https://swipe.yeete.ai" }
+        continue-on-error: true   # a GitHub hiccup keeps the previously published data; the app also falls back to live
+      - name: Build reposwipe.html + static site (OG stubs for 73 packs, privacy, sitemap, CNAME, data/)
         run: python3 build.py --site
         env: { REPOSWIPE_ORIGIN: "https://swipe.yeete.ai" }
-      - name: End-to-end suite (122 checks; must be green to deploy)
+      - name: End-to-end suite (must be green to deploy)
         run: node test.js
       - name: Attach reposwipe.html (Hostinger / native app sync)
         uses: actions/upload-artifact@v4
