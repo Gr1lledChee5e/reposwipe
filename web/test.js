@@ -19,6 +19,9 @@ function check(name, ok, detail = "") {
   await page.addInitScript(() => {
     Object.defineProperty(window, "showSaveFilePicker", { value: undefined, configurable: true });
     Object.defineProperty(window, "showDirectoryPicker", { value: undefined, configurable: true });
+    // the snapshot feed (data/*.json on swipe.yeete.ai) is stubbed per test; by default it 404s so the suite stays deterministic
+    const f0 = window.fetch; window.__snapData = null;
+    window.fetch = (u, i) => { const url = String(u); if (/\/data\/[\w\/-]+\.json/.test(url)) { const key = url.split("/data/")[1]; const d = window.__snapData && window.__snapData[key]; return Promise.resolve(new Response(d ? JSON.stringify(d) : "{}", { status: d ? 200 : 404, headers: { "content-type": "application/json" } })); } return f0(u, i); };
   });
   const errors = [];
   page.on("pageerror", (e) => errors.push("pageerror: " + e.message));
@@ -694,7 +697,87 @@ function check(name, ok, detail = "") {
   check("search: ✕ on the chip returns to the channel feed and clears the hash", await page.evaluate(() => S.searchQ === "" && location.hash === "" && document.getElementById("feedSearch").value === "") && (await page.locator("#channelChips .chchip").count()) > 3);
   await page.evaluate(() => { location.hash = "#/search/rag%20memory"; }); await page.waitForTimeout(600);
   check("search: #/search/<q> deep link starts a search", await page.evaluate(() => S.searchQ === "rag memory" && document.getElementById("searchChip") !== null));
-  await page.evaluate(() => { setSearch(""); window.fetch = window.__realFetch4; });
+  await page.evaluate(() => { setSearch(""); if (window.__realFetch4) window.fetch = window.__realFetch4; }); // (a reload in this section already restored the real fetch)
+
+  // 5j. Snapshot feed (v10): data/*.json served by the site is used for the first pages, packs and Awesome; live API on top
+  const snapRepo = (id, full) => ({ id, full_name: full, name: full.split("/")[1], html_url: "https://github.com/" + full, description: "snap " + full, language: "Go", topics: ["mcp"], stargazers_count: 1000 + id % 100, forks_count: 1, open_issues_count: 0, pushed_at: new Date().toISOString(), created_at: "2025-01-01T00:00:00Z", owner: { login: "snap", avatar_url: "" }, license: null, archived: false });
+  await page.evaluate((mk) => {
+    const mkR = new Function("return " + mk)();
+    const list = (prefix, n) => Array.from({ length: n }, (_, i) => mkR(900000 + i + prefix * 1000, "snap/" + prefix + "-" + i));
+    window.__snapData = { "channels.json": { generated: new Date(Date.now() - 23 * 60000).toISOString(), channels: { mcp: list(1, 70), claude: list(2, 40), agents: list(3, 95), trend: list(4, 30), hot: list(5, 10) } },
+      "awesome.json": { repos: list(6, 45) }, "packs/engineer.json": { repos: list(7, 20).map((r, i) => Object.assign(r, { _pick: i < 2 })) } };
+    snap = null; snapLoad = null; snapMeta = null; packCache.clear();
+    window.__realFetch5 = window.fetch; window.__liveSearch = 0;
+    window.fetch = async (u, i) => { if (/api\.github\.com\/search\/repositories/.test(String(u))) { window.__liveSearch++; return new Response(JSON.stringify({ items: [] }), { status: 200, headers: { "content-type": "application/json" } }); } return window.__realFetch5(u, i); };
+    S.channelsOn = { mcp: true, claude: true, agents: true, awesome: true, trend: false, hot: true }; S.customChannels = []; save();
+  }, snapRepo.toString());
+  await page.evaluate(() => loadFeed()); await page.waitForTimeout(900);
+  check("snapshot: first page comes entirely from data/channels.json + awesome.json — zero search API calls", await page.evaluate(() => __liveSearch === 0 && feed.length > 100 && feed.every(r => /^snap\//.test(r.full_name)) && snapMeta !== null));
+  check("snapshot: includes Awesome-list repos and respects the channel toggles (no trend)", await page.evaluate(() => feed.some(r => /^snap\/6-/.test(r.full_name)) && !feed.some(r => /^snap\/4-/.test(r.full_name))));
+  await page.evaluate(async () => { for (let i = 0; i < 30 && fetchingMore; i++) await new Promise(r => setTimeout(r, 100)); page = 3; await refill(); }); await page.waitForTimeout(300);
+  check("snapshot: page 4 falls through to the live API (snapshot holds 3 pages)", await page.evaluate(() => __liveSearch > 0));
+  await page.evaluate(() => { S.filters.stars = 1050; save(); }); await page.evaluate(() => loadFeed()); await page.waitForTimeout(700);
+  check("snapshot: filters apply client-side to snapshot repos", await page.evaluate(() => feed.length > 0 && feed.every(r => r.stargazers_count >= 1050)));
+  await page.evaluate(() => { S.filters.stars = 0; save(); });
+  const packSnap = await page.evaluate(async () => { const p = PACKS.find(x => x.id === "engineer"); const r = await fetchPack(p); return r.length === 20 && r[0]._pick === true && r[0].full_name === "snap/7-0" && packCache.has("engineer"); });
+  check("snapshot: packs load from data/packs/<id>.json (picks first) with no API calls", packSnap);
+  await page.click('.tab[data-tab="profile"]'); await page.waitForTimeout(300);
+  check("snapshot: You tab shows the snapshot age", /23m/.test(await page.locator("#snapInfo").innerText()));
+  await page.evaluate(() => { window.__snapData = null; snap = null; snapLoad = null; snapMeta = null; packCache.clear(); window.fetch = window.__realFetch5; });
+  await page.evaluate(() => loadFeed()); await page.waitForTimeout(500);
+  check("snapshot: without data/ the feed goes live exactly as before", await page.evaluate(() => snap === null && snapMeta === null));
+
+  // 5k. Stack export (zip + share sheet) and Stack groups + search (v10)
+  const zipInfo = await page.evaluate(() => {
+    const z = buildStackZip(); const b = z.bytes; const dv = new DataView(b.buffer, b.byteOffset, b.byteLength);
+    const eocd = b.length - 22; const sig = dv.getUint32(eocd, true), entries = dv.getUint16(eocd + 10, true), cdStart = dv.getUint32(eocd + 16, true);
+    const names = []; let o = cdStart; for (let i = 0; i < entries; i++) { if (dv.getUint32(o, true) !== 0x02014b50) break; const fl = dv.getUint16(o + 28, true); names.push(new TextDecoder().decode(b.subarray(o + 46, o + 46 + fl))); o += 46 + fl; }
+    // data of the first entry must CRC-match its header (store method)
+    const fl0 = dv.getUint16(26, true), size0 = dv.getUint32(22, true), crc0 = dv.getUint32(14, true); const data0 = b.subarray(30 + fl0, 30 + fl0 + size0);
+    return { sig: sig === 0x06054b50, local: dv.getUint32(0, true) === 0x04034b50, entries, count: z.count, names: names.slice(0, 5), skills: names.filter(n => n.startsWith("skills/")).length, crcOk: crc32(data0) === crc0, name: z.name, stack: S.stack.length };
+  });
+  check("export: Stack zip is a valid store-method archive (signatures, central directory, CRC)", zipInfo.sig && zipInfo.local && zipInfo.entries === zipInfo.count && zipInfo.crcOk && /^reposwipe-stack-\d{4}-\d\d-\d\d\.zip$/.test(zipInfo.name));
+  check("export: zip holds README, md list, MCP config, backup, CSV and one SKILL.md per repo", zipInfo.names.join(",") === "README.txt,reposwipe-stack.md,mcp-servers.json,reposwipe-backup.json,stack.csv" && zipInfo.skills === zipInfo.stack);
+  check("export: CSV has a header and one quoted row per repo", await page.evaluate(() => { const c = buildCsv().trim().split("\n"); return c[0].startsWith("full_name,url,description") && c.length === S.stack.length + 1 && /^"[^"]+\/[^"]+","https:\/\/github\.com\//.test(c[1]); }));
+  await page.click('.tab[data-tab="stack"]'); await page.waitForTimeout(400);
+  await page.click("#saveBtn"); await page.waitForTimeout(200);
+  check("export: Save menu offers .zip and Share/Save to Drive", (await page.locator("#saveZip").count()) === 1 && (await page.locator("#saveShare").count()) === 1);
+  const [zipDl] = await Promise.all([page.waitForEvent("download", { timeout: 8000 }).catch(() => null), page.click("#saveZip")]);
+  check("export: 'Everything as a .zip' downloads the archive", !!zipDl && /reposwipe-stack-.*\.zip$/.test(zipDl.suggestedFilename()));
+  await page.evaluate(() => { window.__shared = null; navigator.canShare = (d) => !!(d && d.files && d.files.length); navigator.share = async (d) => { window.__shared = { n: d.files.length, name: d.files[0].name, type: d.files[0].type, size: d.files[0].size }; }; });
+  await page.click("#saveBtn"); await page.waitForTimeout(200); await page.click("#saveShare"); await page.waitForTimeout(500);
+  check("export: Share / Save to Drive hands the zip to the system share sheet", await page.evaluate(() => __shared && __shared.n === 1 && /\.zip$/.test(__shared.name) && __shared.type === "application/zip" && __shared.size > 1000));
+  await page.evaluate(() => { delete navigator.canShare; delete navigator.share; });
+  // groups: create via the + chip, move a repo via the picker, filter by chip, tag on rows, search, auto-group, delete, markdown
+  await page.evaluate(() => { S.groups = []; S.stack.forEach(s => delete s.group); save(); }); await page.evaluate(() => renderStack()); await page.waitForTimeout(300);
+  await page.click("#groupNewBtn"); await page.fill("#groupNewInput", "Zebra"); await page.press("#groupNewInput", "Enter"); await page.waitForTimeout(300);
+  check("groups: + New group creates a group and selects its chip", await page.evaluate(() => S.groups.length === 1 && S.groups[0].name === "Zebra" && stackGroup === S.groups[0].id) && (await page.locator('#groupChips .chchip.on', { hasText: "Zebra" }).count()) === 1);
+  await page.locator('#groupChips .chchip[data-g=""]').click(); await page.waitForTimeout(300);
+  const firstId = await page.evaluate(() => sortedStack()[0].repo.id);
+  await page.locator(".rowgroup").first().click(); await page.waitForTimeout(300);
+  check("groups: row folder button opens the picker listing the group + No group + New group", (await page.locator('#aiMenu[data-mode="group"] .grow').count()) === 3);
+  await page.locator('#aiMenu .grow[data-g]:not([data-g=""])').first().click(); await page.waitForTimeout(300);
+  check("groups: picking a group moves the repo and shows a tag on its row", await page.evaluate((id) => S.stack.find(s => s.repo.id === id).group === S.groups[0].id, firstId) && (await page.locator("#stackview .srow .gtag", { hasText: "Zebra" }).count()) === 1);
+  await page.locator('#groupChips .chchip', { hasText: "Zebra" }).click(); await page.waitForTimeout(300);
+  check("groups: group chip filters the list to that group (1 row); Ungrouped chip appears", (await page.locator("#stackview .srow").count()) === 1 && (await page.locator('#groupChips .chchip[data-g="__none"]').count()) === 1);
+  await page.locator('#groupChips .chchip[data-g="__none"]').click(); await page.waitForTimeout(300);
+  check("groups: Ungrouped shows the rest", (await page.locator("#stackview .srow").count()) === zipInfo.stack - 1);
+  await page.locator('#groupChips .chchip[data-g=""]').click(); await page.waitForTimeout(300);
+  await page.fill("#stackSearch", "zebra"); await page.waitForTimeout(200);
+  check("stack search: matches group names too, without losing focus", (await page.locator("#stackview .srow:visible").count()) === 1 && await page.evaluate(() => document.activeElement && document.activeElement.id === "stackSearch"));
+  await page.fill("#stackSearch", "zzqqxx"); await page.waitForTimeout(200);
+  check("stack search: no-match message", (await page.locator("#stackNoMatch").count()) === 1);
+  await page.click("#stackSearchClear"); await page.waitForTimeout(300);
+  check("stack search: ✕ clears", await page.evaluate(() => stackQ === "") && (await page.locator("#stackview .srow").count()) === zipInfo.stack);
+  await page.click("#autoGroupBtn"); await page.waitForTimeout(400);
+  check("groups: Auto-group files ungrouped repos into AI-category groups", await page.evaluate(() => S.groups.length >= 3 && S.stack.filter(s => s.group).length > 10));
+  check("export: markdown is grouped by section when groups exist", await page.evaluate(() => { const md = buildMarkdown(); return md.indexOf("## Zebra") > 0 && (md.match(/^## /gm) || []).length >= 3; }));
+  await page.locator(".rowgroup").first().click(); await page.waitForTimeout(300);
+  await page.locator('#aiMenu [data-del]').first().click(); await page.waitForTimeout(300);
+  check("groups: deleting a group ungroups its repos", await page.evaluate(() => S.groups.every(g => g.name !== "Zebra") && !S.stack.some(s => s.group === "__gone")));
+  await page.reload(); await page.waitForTimeout(1200);
+  check("groups persist across reload (and survive in backups)", await page.evaluate(() => S.groups.length >= 2 && S.stack.some(s => s.group) && JSON.parse(buildBackup()).state.groups.length === S.groups.length));
+  await page.evaluate(() => { S.groups = []; S.stack.forEach(s => delete s.group); save(); });
 
   // 6. persistence
   await page.reload(); await page.waitForTimeout(1200);

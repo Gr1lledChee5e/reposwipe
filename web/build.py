@@ -34,6 +34,10 @@ if SITE:
     os.makedirs(os.path.join(site, "og"), exist_ok=True)
     for f in ("app.png", "pack.png"):
         shutil.copy(os.path.join(HERE, "og", f), os.path.join(site, "og", f))
+    data = os.path.join(HERE, "data")   # snapshot feed (snapshot.py) — optional; the app falls back to the live API
+    if os.path.isdir(data):
+        shutil.copytree(data, os.path.join(site, "data"), dirs_exist_ok=True)
+        print("site: data/ snapshot included")
     open(os.path.join(site, "CNAME"), "w").write(ORIGIN.replace("https://", "").replace("http://", "").rstrip("/") + "\n")
     open(os.path.join(site, ".nojekyll"), "w").write("")
     open(os.path.join(site, "robots.txt"), "w").write("User-agent: *\nAllow: /\nSitemap: %s/sitemap.xml\n" % ORIGIN)

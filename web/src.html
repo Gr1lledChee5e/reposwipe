@@ -287,6 +287,19 @@
   .trpill .svgi{width:10px;height:10px}
   .readme .trpill{display:inline-flex;margin:0 0 6px}
   .trnote{margin-top:7px;flex-shrink:0}
+  .gtag{font-size:9px;font-weight:800;letter-spacing:.3px;color:#DDD6FE;background:rgba(139,92,246,.22);border:1px solid rgba(192,132,252,.35);border-radius:999px;padding:1px 7px;margin-left:6px;vertical-align:2px;white-space:nowrap}
+  .stacktools{padding:0 2px 8px}
+  .stacktools .searchbox{margin-bottom:8px}
+  .gchips{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+  .gchips::-webkit-scrollbar{display:none}
+  .mini.rowgroup{color:#C4B5FD}
+  .grow{display:flex;align-items:center;gap:10px;padding:11px 18px;border-top:1px solid rgba(122,111,168,.12);cursor:pointer}
+  .grow:hover{background:rgba(139,92,246,.12)}
+  .grow .gn{flex:1;font-size:13.5px;font-weight:800}
+  .grow .gc{font-size:10.5px;color:var(--muted)}
+  .grow .gdel{color:var(--muted);padding:4px}
+  .grow .gdel:hover{color:var(--nope)}
+  .grow.on .gn{color:#E9D5FF}
   .trnote .trpill{margin:0}
   .pe .svgi{width:26px;height:26px;color:var(--accent2);}
   .empty .e .svgi{width:46px;height:46px;color:var(--accent2);}
@@ -515,7 +528,7 @@ const I18N={
   pack_lower:"pack",
   sec_ai:"AI CONNECTIONS", ai_claude:"Claude", ai_openai:"ChatGPT", ai_pplx:"Perplexity", ai_key_ph:"Paste API key", ai_connect:"Connect", ai_connected_model:"Connected · {model}", ai_connected:"Connected", ai_disconnect:"Disconnect", ai_rejected:"That key was rejected.", ai_hint:"Your keys stay on this device, are sent only to that provider, and are never included in backups. This is the way to use your own account: there is no third-party login for claude.ai, ChatGPT or Perplexity.", ai_get_key:"Get a key", ai_default:"Default AI for in-app answers", ai_auto:"Auto (first connected)",
   sec_mcp:"MCP SERVERS", mcp_hint:"Add remote MCP servers (https). Claude uses them as tools inside Toolkit Chat. Servers running on your own computer can't be reached from a phone or browser.", mcp_name_ph:"Name", mcp_url_ph:"https://…/mcp", mcp_token_ph:"Bearer token (optional)", mcp_add:"Add & test", mcp_ok:"Connected · {n} tools", mcp_saved:"Saved — couldn't test from here, Claude can still reach it", mcp_fail:"No response — check the URL", mcp_none:"No MCP servers yet.",
-  ask_ai:"Ask AI about this repo", ask_ai_stack:"Ask AI about my Stack", ask_ai_pack:"Ask AI about this pack", ask_ai_inapp:"Ask your connected AI", ask_ai_inapp_sub:"answers right here, with your MCP tools", chat_title:"Toolkit chat · {title}", chat_ph:"Ask anything about these repos…", chat_send:"Send", chat_thinking:"Thinking…", chat_noai:"Connect Claude, ChatGPT or Perplexity in the You tab to chat here.", chat_goconnect:"Open connections", chat_tools:"used tool", skill_ai:"Write with AI", skill_ai_sub:"a better SKILL.md from your connected AI", skill_ai_done:"Skill written by {provider}", ai_err:"AI error: {e}", ai_repo_q:"In 5 short bullets: what does this repo do, who is it for, and how do I install and use it? Then one line on why it belongs in an AI toolkit.", route_loading:"Fetching {repo} from GitHub…", route_notfound:"That repo doesn't exist on GitHub.", route_badpack:"No pack with that name.", shared_stack:"Shared Stack", shared_hint:"{n} repos · shared {date} · tap + to add one, or add them all to your Stack.", shared_add_all:"Add all to my Stack", shared_fail:"That share link has expired or doesn't exist.", pack_share:"Copy pack link", pack_link_copied:"Pack link copied ✓", repo_pinned:"{name} is up first — swipe to decide.", tr_from:"translated from {lang}", tr_show:"show translation", tr_tap:"Tap to see the original", tr_auto:"Auto-translate repos", tr_auto_hint:"Repos written in another language are shown in {lang}. Uses your connected AI when available, otherwise Google Translate.", tr_on:"✓ on", tr_off:"off", search_ph:"Search GitHub — voice agents, rag, topic:langchain…", t_search_clear:"Clear search", search_chip:"Search", filters:"Filters", f_language:"Language", f_any:"Any", f_stars:"Minimum stars", f_updated:"Updated within", f_week:"7 days", f_month:"30 days", f_year:"a year", f_sort:"Sort by", f_sort_updated:"Recently updated", f_sort_stars:"Most stars", f_sort_match:"Best match", f_mcp:"MCP servers only", f_license:"License", f_apply:"Apply", f_reset:"Reset", no_results:"Nothing matches “{q}”.<br>Try another word or fewer filters.", toast_search:"Searching GitHub for “{q}”"
+  ask_ai:"Ask AI about this repo", ask_ai_stack:"Ask AI about my Stack", ask_ai_pack:"Ask AI about this pack", ask_ai_inapp:"Ask your connected AI", ask_ai_inapp_sub:"answers right here, with your MCP tools", chat_title:"Toolkit chat · {title}", chat_ph:"Ask anything about these repos…", chat_send:"Send", chat_thinking:"Thinking…", chat_noai:"Connect Claude, ChatGPT or Perplexity in the You tab to chat here.", chat_goconnect:"Open connections", chat_tools:"used tool", skill_ai:"Write with AI", skill_ai_sub:"a better SKILL.md from your connected AI", skill_ai_done:"Skill written by {provider}", ai_err:"AI error: {e}", ai_repo_q:"In 5 short bullets: what does this repo do, who is it for, and how do I install and use it? Then one line on why it belongs in an AI toolkit.", route_loading:"Fetching {repo} from GitHub…", route_notfound:"That repo doesn't exist on GitHub.", route_badpack:"No pack with that name.", shared_stack:"Shared Stack", shared_hint:"{n} repos · shared {date} · tap + to add one, or add them all to your Stack.", shared_add_all:"Add all to my Stack", shared_fail:"That share link has expired or doesn't exist.", pack_share:"Copy pack link", pack_link_copied:"Pack link copied ✓", repo_pinned:"{name} is up first — swipe to decide.", tr_from:"translated from {lang}", tr_show:"show translation", tr_tap:"Tap to see the original", tr_auto:"Auto-translate repos", tr_auto_hint:"Repos written in another language are shown in {lang}. Uses your connected AI when available, otherwise Google Translate.", tr_on:"✓ on", tr_off:"off", search_ph:"Search GitHub — voice agents, rag, topic:langchain…", t_search_clear:"Clear search", search_chip:"Search", filters:"Filters", f_language:"Language", f_any:"Any", f_stars:"Minimum stars", f_updated:"Updated within", f_week:"7 days", f_month:"30 days", f_year:"a year", f_sort:"Sort by", f_sort_updated:"Recently updated", f_sort_stars:"Most stars", f_sort_match:"Best match", f_mcp:"MCP servers only", f_license:"License", f_apply:"Apply", f_reset:"Reset", no_results:"Nothing matches “{q}”.<br>Try another word or fewer filters.", toast_search:"Searching GitHub for “{q}”", snap_info:"Feed snapshot refreshed {ago} ago · live GitHub layered on top", snap_live:"Live GitHub feed (no snapshot yet)", sm_zip:"Everything as a .zip", sm_zip_sub:"list, MCP config, backup, CSV + a SKILL.md per repo", sm_share:"Share / Save to Drive…", sm_share_sub:"share sheet: Google Drive, Files, AirDrop, mail", toast_zip:"Zipped {n} files ✓", toast_shared:"Shared ✓", toast_share_fallback:"Sharing files isn't available here — downloaded instead", stack_search_ph:"Search your Stack…", grp_all:"All", grp_none:"Ungrouped", grp_new:"New group", grp_new_ph:"Group name", grp_auto:"Auto-group by AI category", grp_pick:"Move {name} to…", grp_remove:"No group", grp_delete:"Delete group", toast_group_new:"Group “{g}” created", toast_moved:"{name} → {g}", toast_ungrouped:"{name} removed from its group", toast_auto:"{n} repos grouped", toast_group_deleted:"Group “{g}” deleted — its repos are ungrouped", stack_nomatch:"No repos match “{q}”.", grp_ungrouped_md:"Ungrouped"
  },
  es:{
   tagline:"enamórate del código", quiz_q:"¿Cuál es tu trabajo? Consigue tu pack inicial al instante:",
@@ -571,7 +584,7 @@ const I18N={
   pack_lower:"pack",
   sec_ai:"CONEXIONES DE IA", ai_claude:"Claude", ai_openai:"ChatGPT", ai_pplx:"Perplexity", ai_key_ph:"Pega la clave API", ai_connect:"Conectar", ai_connected_model:"Conectado · {model}", ai_connected:"Conectado", ai_disconnect:"Desconectar", ai_rejected:"Esa clave fue rechazada.", ai_hint:"Tus claves se quedan en este dispositivo, se envían solo a ese proveedor y nunca se incluyen en las copias de seguridad. Así se usa tu propia cuenta: no existe inicio de sesión de terceros para claude.ai, ChatGPT o Perplexity.", ai_get_key:"Obtener clave", ai_default:"IA predeterminada para respuestas en la app", ai_auto:"Automático (la primera conectada)",
   sec_mcp:"SERVIDORES MCP", mcp_hint:"Añade servidores MCP remotos (https). Claude los usa como herramientas en el chat. Los servidores de tu propio equipo no son accesibles desde un móvil o navegador.", mcp_name_ph:"Nombre", mcp_url_ph:"https://…/mcp", mcp_token_ph:"Token Bearer (opcional)", mcp_add:"Añadir y probar", mcp_ok:"Conectado · {n} herramientas", mcp_saved:"Guardado — no se pudo probar desde aquí, Claude aún puede acceder", mcp_fail:"Sin respuesta — revisa la URL", mcp_none:"Aún no hay servidores MCP.",
-  ask_ai:"Preguntar a la IA sobre este repo", ask_ai_stack:"Preguntar a la IA sobre mi Colección", ask_ai_pack:"Preguntar a la IA sobre este pack", ask_ai_inapp:"Preguntar a tu IA conectada", ask_ai_inapp_sub:"responde aquí mismo, con tus herramientas MCP", chat_title:"Chat del kit · {title}", chat_ph:"Pregunta lo que quieras sobre estos repos…", chat_send:"Enviar", chat_thinking:"Pensando…", chat_noai:"Conecta Claude, ChatGPT o Perplexity en la pestaña Tú para chatear aquí.", chat_goconnect:"Abrir conexiones", chat_tools:"usó la herramienta", skill_ai:"Escribir con IA", skill_ai_sub:"un SKILL.md mejor con tu IA conectada", skill_ai_done:"Skill escrita por {provider}", ai_err:"Error de IA: {e}", ai_repo_q:"En 5 viñetas cortas: ¿qué hace este repo, para quién es y cómo lo instalo y uso? Luego una línea sobre por qué merece estar en un kit de IA.", route_loading:"Obteniendo {repo} de GitHub…", route_notfound:"Ese repo no existe en GitHub.", route_badpack:"No hay ningún pack con ese nombre.", shared_stack:"Colección compartida", shared_hint:"{n} repos · compartida el {date} · toca + para añadir uno, o añádelos todos a tu Colección.", shared_add_all:"Añadir todos a mi Colección", shared_fail:"Ese enlace ha caducado o no existe.", pack_share:"Copiar enlace del pack", pack_link_copied:"Enlace del pack copiado ✓", repo_pinned:"{name} va primero — desliza para decidir.", tr_from:"traducido del {lang}", tr_show:"ver traducción", tr_tap:"Toca para ver el original", tr_auto:"Traducir repos automáticamente", tr_auto_hint:"Los repos escritos en otro idioma se muestran en {lang}. Usa tu IA conectada si la hay; si no, Google Translate.", tr_on:"✓ sí", tr_off:"no", search_ph:"Buscar en GitHub — voice agents, rag, topic:langchain…", t_search_clear:"Borrar búsqueda", search_chip:"Búsqueda", filters:"Filtros", f_language:"Lenguaje", f_any:"Cualquiera", f_stars:"Estrellas mínimas", f_updated:"Actualizado en", f_week:"7 días", f_month:"30 días", f_year:"un año", f_sort:"Ordenar por", f_sort_updated:"Actualización reciente", f_sort_stars:"Más estrellas", f_sort_match:"Mejor coincidencia", f_mcp:"Solo servidores MCP", f_license:"Licencia", f_apply:"Aplicar", f_reset:"Restablecer", no_results:"Nada coincide con “{q}”.<br>Prueba otra palabra o menos filtros.", toast_search:"Buscando “{q}” en GitHub"
+  ask_ai:"Preguntar a la IA sobre este repo", ask_ai_stack:"Preguntar a la IA sobre mi Colección", ask_ai_pack:"Preguntar a la IA sobre este pack", ask_ai_inapp:"Preguntar a tu IA conectada", ask_ai_inapp_sub:"responde aquí mismo, con tus herramientas MCP", chat_title:"Chat del kit · {title}", chat_ph:"Pregunta lo que quieras sobre estos repos…", chat_send:"Enviar", chat_thinking:"Pensando…", chat_noai:"Conecta Claude, ChatGPT o Perplexity en la pestaña Tú para chatear aquí.", chat_goconnect:"Abrir conexiones", chat_tools:"usó la herramienta", skill_ai:"Escribir con IA", skill_ai_sub:"un SKILL.md mejor con tu IA conectada", skill_ai_done:"Skill escrita por {provider}", ai_err:"Error de IA: {e}", ai_repo_q:"En 5 viñetas cortas: ¿qué hace este repo, para quién es y cómo lo instalo y uso? Luego una línea sobre por qué merece estar en un kit de IA.", route_loading:"Obteniendo {repo} de GitHub…", route_notfound:"Ese repo no existe en GitHub.", route_badpack:"No hay ningún pack con ese nombre.", shared_stack:"Colección compartida", shared_hint:"{n} repos · compartida el {date} · toca + para añadir uno, o añádelos todos a tu Colección.", shared_add_all:"Añadir todos a mi Colección", shared_fail:"Ese enlace ha caducado o no existe.", pack_share:"Copiar enlace del pack", pack_link_copied:"Enlace del pack copiado ✓", repo_pinned:"{name} va primero — desliza para decidir.", tr_from:"traducido del {lang}", tr_show:"ver traducción", tr_tap:"Toca para ver el original", tr_auto:"Traducir repos automáticamente", tr_auto_hint:"Los repos escritos en otro idioma se muestran en {lang}. Usa tu IA conectada si la hay; si no, Google Translate.", tr_on:"✓ sí", tr_off:"no", search_ph:"Buscar en GitHub — voice agents, rag, topic:langchain…", t_search_clear:"Borrar búsqueda", search_chip:"Búsqueda", filters:"Filtros", f_language:"Lenguaje", f_any:"Cualquiera", f_stars:"Estrellas mínimas", f_updated:"Actualizado en", f_week:"7 días", f_month:"30 días", f_year:"un año", f_sort:"Ordenar por", f_sort_updated:"Actualización reciente", f_sort_stars:"Más estrellas", f_sort_match:"Mejor coincidencia", f_mcp:"Solo servidores MCP", f_license:"Licencia", f_apply:"Aplicar", f_reset:"Restablecer", no_results:"Nada coincide con “{q}”.<br>Prueba otra palabra o menos filtros.", toast_search:"Buscando “{q}” en GitHub", snap_info:"Instantánea del feed actualizada hace {ago} · GitHub en vivo encima", snap_live:"Feed de GitHub en vivo (aún sin instantánea)", sm_zip:"Todo en un .zip", sm_zip_sub:"lista, config MCP, copia, CSV + un SKILL.md por repo", sm_share:"Compartir / Guardar en Drive…", sm_share_sub:"hoja de compartir: Google Drive, Archivos, AirDrop, correo", toast_zip:"{n} archivos comprimidos ✓", toast_shared:"Compartido ✓", toast_share_fallback:"Compartir archivos no está disponible aquí — se descargó en su lugar", stack_search_ph:"Buscar en tu Colección…", grp_all:"Todos", grp_none:"Sin grupo", grp_new:"Nuevo grupo", grp_new_ph:"Nombre del grupo", grp_auto:"Agrupar por categoría de IA", grp_pick:"Mover {name} a…", grp_remove:"Sin grupo", grp_delete:"Eliminar grupo", toast_group_new:"Grupo “{g}” creado", toast_moved:"{name} → {g}", toast_ungrouped:"{name} quitado de su grupo", toast_auto:"{n} repos agrupados", toast_group_deleted:"Grupo “{g}” eliminado — sus repos quedan sin grupo", stack_nomatch:"Ningún repo coincide con “{q}”.", grp_ungrouped_md:"Sin grupo"
  },
  fr:{
   tagline:"tombez amoureux du code", quiz_q:"Quel est votre métier ? Obtenez votre pack de démarrage instantanément :",
@@ -627,7 +640,7 @@ const I18N={
   pack_lower:"pack",
   sec_ai:"CONNEXIONS IA", ai_claude:"Claude", ai_openai:"ChatGPT", ai_pplx:"Perplexity", ai_key_ph:"Collez la clé API", ai_connect:"Connecter", ai_connected_model:"Connecté · {model}", ai_connected:"Connecté", ai_disconnect:"Déconnecter", ai_rejected:"Cette clé a été refusée.", ai_hint:"Vos clés restent sur cet appareil, ne sont envoyées qu'à ce fournisseur et ne figurent jamais dans les sauvegardes. C'est ainsi qu'on utilise son propre compte : il n'existe pas de connexion tierce pour claude.ai, ChatGPT ou Perplexity.", ai_get_key:"Obtenir une clé", ai_default:"IA par défaut pour les réponses dans l'app", ai_auto:"Auto (première connectée)",
   sec_mcp:"SERVEURS MCP", mcp_hint:"Ajoutez des serveurs MCP distants (https). Claude les utilise comme outils dans le chat. Les serveurs sur votre propre ordinateur ne sont pas joignables depuis un téléphone ou un navigateur.", mcp_name_ph:"Nom", mcp_url_ph:"https://…/mcp", mcp_token_ph:"Jeton Bearer (facultatif)", mcp_add:"Ajouter et tester", mcp_ok:"Connecté · {n} outils", mcp_saved:"Enregistré — impossible de tester d'ici, Claude peut quand même l'atteindre", mcp_fail:"Pas de réponse — vérifiez l'URL", mcp_none:"Aucun serveur MCP pour l'instant.",
-  ask_ai:"Demander à l'IA à propos de ce dépôt", ask_ai_stack:"Demander à l'IA à propos de ma Collection", ask_ai_pack:"Demander à l'IA à propos de ce pack", ask_ai_inapp:"Demander à votre IA connectée", ask_ai_inapp_sub:"répond ici même, avec vos outils MCP", chat_title:"Chat du kit · {title}", chat_ph:"Posez une question sur ces dépôts…", chat_send:"Envoyer", chat_thinking:"Réflexion…", chat_noai:"Connectez Claude, ChatGPT ou Perplexity dans l'onglet Vous pour discuter ici.", chat_goconnect:"Ouvrir les connexions", chat_tools:"outil utilisé", skill_ai:"Rédiger avec l'IA", skill_ai_sub:"un meilleur SKILL.md grâce à votre IA connectée", skill_ai_done:"Skill rédigée par {provider}", ai_err:"Erreur IA : {e}", ai_repo_q:"En 5 puces courtes : que fait ce dépôt, pour qui, et comment l'installer et l'utiliser ? Puis une ligne sur sa place dans un kit IA.", route_loading:"Récupération de {repo} depuis GitHub…", route_notfound:"Ce dépôt n'existe pas sur GitHub.", route_badpack:"Aucun pack de ce nom.", shared_stack:"Collection partagée", shared_hint:"{n} dépôts · partagée le {date} · touchez + pour en ajouter un, ou ajoutez-les tous à votre Collection.", shared_add_all:"Tout ajouter à ma Collection", shared_fail:"Ce lien de partage a expiré ou n'existe pas.", pack_share:"Copier le lien du pack", pack_link_copied:"Lien du pack copié ✓", repo_pinned:"{name} passe en premier — swipez pour décider.", tr_from:"traduit du {lang}", tr_show:"voir la traduction", tr_tap:"Touchez pour voir l'original", tr_auto:"Traduire les dépôts automatiquement", tr_auto_hint:"Les dépôts écrits dans une autre langue sont affichés en {lang}. Utilise votre IA connectée si disponible, sinon Google Traduction.", tr_on:"✓ oui", tr_off:"non", search_ph:"Rechercher sur GitHub — voice agents, rag, topic:langchain…", t_search_clear:"Effacer la recherche", search_chip:"Recherche", filters:"Filtres", f_language:"Langage", f_any:"Tous", f_stars:"Étoiles minimum", f_updated:"Mis à jour depuis", f_week:"7 jours", f_month:"30 jours", f_year:"un an", f_sort:"Trier par", f_sort_updated:"Mise à jour récente", f_sort_stars:"Plus d'étoiles", f_sort_match:"Pertinence", f_mcp:"Serveurs MCP uniquement", f_license:"Licence", f_apply:"Appliquer", f_reset:"Réinitialiser", no_results:"Rien ne correspond à « {q} ».<br>Essayez un autre mot ou moins de filtres.", toast_search:"Recherche de « {q} » sur GitHub"
+  ask_ai:"Demander à l'IA à propos de ce dépôt", ask_ai_stack:"Demander à l'IA à propos de ma Collection", ask_ai_pack:"Demander à l'IA à propos de ce pack", ask_ai_inapp:"Demander à votre IA connectée", ask_ai_inapp_sub:"répond ici même, avec vos outils MCP", chat_title:"Chat du kit · {title}", chat_ph:"Posez une question sur ces dépôts…", chat_send:"Envoyer", chat_thinking:"Réflexion…", chat_noai:"Connectez Claude, ChatGPT ou Perplexity dans l'onglet Vous pour discuter ici.", chat_goconnect:"Ouvrir les connexions", chat_tools:"outil utilisé", skill_ai:"Rédiger avec l'IA", skill_ai_sub:"un meilleur SKILL.md grâce à votre IA connectée", skill_ai_done:"Skill rédigée par {provider}", ai_err:"Erreur IA : {e}", ai_repo_q:"En 5 puces courtes : que fait ce dépôt, pour qui, et comment l'installer et l'utiliser ? Puis une ligne sur sa place dans un kit IA.", route_loading:"Récupération de {repo} depuis GitHub…", route_notfound:"Ce dépôt n'existe pas sur GitHub.", route_badpack:"Aucun pack de ce nom.", shared_stack:"Collection partagée", shared_hint:"{n} dépôts · partagée le {date} · touchez + pour en ajouter un, ou ajoutez-les tous à votre Collection.", shared_add_all:"Tout ajouter à ma Collection", shared_fail:"Ce lien de partage a expiré ou n'existe pas.", pack_share:"Copier le lien du pack", pack_link_copied:"Lien du pack copié ✓", repo_pinned:"{name} passe en premier — swipez pour décider.", tr_from:"traduit du {lang}", tr_show:"voir la traduction", tr_tap:"Touchez pour voir l'original", tr_auto:"Traduire les dépôts automatiquement", tr_auto_hint:"Les dépôts écrits dans une autre langue sont affichés en {lang}. Utilise votre IA connectée si disponible, sinon Google Traduction.", tr_on:"✓ oui", tr_off:"non", search_ph:"Rechercher sur GitHub — voice agents, rag, topic:langchain…", t_search_clear:"Effacer la recherche", search_chip:"Recherche", filters:"Filtres", f_language:"Langage", f_any:"Tous", f_stars:"Étoiles minimum", f_updated:"Mis à jour depuis", f_week:"7 jours", f_month:"30 jours", f_year:"un an", f_sort:"Trier par", f_sort_updated:"Mise à jour récente", f_sort_stars:"Plus d'étoiles", f_sort_match:"Pertinence", f_mcp:"Serveurs MCP uniquement", f_license:"Licence", f_apply:"Appliquer", f_reset:"Réinitialiser", no_results:"Rien ne correspond à « {q} ».<br>Essayez un autre mot ou moins de filtres.", toast_search:"Recherche de « {q} » sur GitHub", snap_info:"Instantané du flux actualisé il y a {ago} · GitHub en direct par-dessus", snap_live:"Flux GitHub en direct (pas encore d'instantané)", sm_zip:"Tout en un .zip", sm_zip_sub:"liste, config MCP, sauvegarde, CSV + un SKILL.md par dépôt", sm_share:"Partager / Enregistrer dans Drive…", sm_share_sub:"feuille de partage : Google Drive, Fichiers, AirDrop, mail", toast_zip:"{n} fichiers zippés ✓", toast_shared:"Partagé ✓", toast_share_fallback:"Le partage de fichiers n'est pas disponible ici — téléchargé à la place", stack_search_ph:"Rechercher dans votre Collection…", grp_all:"Tous", grp_none:"Sans groupe", grp_new:"Nouveau groupe", grp_new_ph:"Nom du groupe", grp_auto:"Grouper par catégorie IA", grp_pick:"Déplacer {name} vers…", grp_remove:"Aucun groupe", grp_delete:"Supprimer le groupe", toast_group_new:"Groupe « {g} » créé", toast_moved:"{name} → {g}", toast_ungrouped:"{name} retiré de son groupe", toast_auto:"{n} dépôts groupés", toast_group_deleted:"Groupe « {g} » supprimé — ses dépôts sont sans groupe", stack_nomatch:"Aucun dépôt ne correspond à « {q} ».", grp_ungrouped_md:"Sans groupe"
  },
  de:{
   tagline:"verlieb dich in Code", quiz_q:"Was ist dein Job? Hol dir sofort dein Starterpaket:",
@@ -683,7 +696,7 @@ const I18N={
   pack_lower:"Paket",
   sec_ai:"KI-VERBINDUNGEN", ai_claude:"Claude", ai_openai:"ChatGPT", ai_pplx:"Perplexity", ai_key_ph:"API-Schlüssel einfügen", ai_connect:"Verbinden", ai_connected_model:"Verbunden · {model}", ai_connected:"Verbunden", ai_disconnect:"Trennen", ai_rejected:"Dieser Schlüssel wurde abgelehnt.", ai_hint:"Deine Schlüssel bleiben auf diesem Gerät, werden nur an diesen Anbieter gesendet und nie in Backups aufgenommen. So nutzt du dein eigenes Konto: Für claude.ai, ChatGPT oder Perplexity gibt es keinen Drittanbieter-Login.", ai_get_key:"Schlüssel holen", ai_default:"Standard-KI für Antworten in der App", ai_auto:"Automatisch (erste verbundene)",
   sec_mcp:"MCP-SERVER", mcp_hint:"Füge entfernte MCP-Server (https) hinzu. Claude nutzt sie als Tools im Toolkit-Chat. Server auf deinem eigenen Rechner sind von Handy oder Browser aus nicht erreichbar.", mcp_name_ph:"Name", mcp_url_ph:"https://…/mcp", mcp_token_ph:"Bearer-Token (optional)", mcp_add:"Hinzufügen & testen", mcp_ok:"Verbunden · {n} Tools", mcp_saved:"Gespeichert — von hier nicht testbar, Claude erreicht ihn trotzdem", mcp_fail:"Keine Antwort — URL prüfen", mcp_none:"Noch keine MCP-Server.",
-  ask_ai:"KI zu diesem Repo fragen", ask_ai_stack:"KI zu meiner Sammlung fragen", ask_ai_pack:"KI zu diesem Paket fragen", ask_ai_inapp:"Deine verbundene KI fragen", ask_ai_inapp_sub:"antwortet direkt hier, mit deinen MCP-Tools", chat_title:"Toolkit-Chat · {title}", chat_ph:"Frag alles über diese Repos…", chat_send:"Senden", chat_thinking:"Denkt nach…", chat_noai:"Verbinde Claude, ChatGPT oder Perplexity im Tab „Du“, um hier zu chatten.", chat_goconnect:"Verbindungen öffnen", chat_tools:"Tool verwendet", skill_ai:"Mit KI schreiben", skill_ai_sub:"eine bessere SKILL.md von deiner verbundenen KI", skill_ai_done:"Skill geschrieben von {provider}", ai_err:"KI-Fehler: {e}", ai_repo_q:"In 5 kurzen Stichpunkten: Was tut dieses Repo, für wen ist es, und wie installiere und nutze ich es? Dann ein Satz, warum es in ein KI-Toolkit gehört.", route_loading:"{repo} wird von GitHub geladen…", route_notfound:"Dieses Repo gibt es auf GitHub nicht.", route_badpack:"Kein Paket mit diesem Namen.", shared_stack:"Geteilte Sammlung", shared_hint:"{n} Repos · geteilt am {date} · tippe auf +, um eins hinzuzufügen, oder füge alle deiner Sammlung hinzu.", shared_add_all:"Alle zu meiner Sammlung hinzufügen", shared_fail:"Dieser Teilen-Link ist abgelaufen oder existiert nicht.", pack_share:"Paket-Link kopieren", pack_link_copied:"Paket-Link kopiert ✓", repo_pinned:"{name} kommt zuerst — swipe, um zu entscheiden.", tr_from:"übersetzt aus {lang}", tr_show:"Übersetzung zeigen", tr_tap:"Tippen für das Original", tr_auto:"Repos automatisch übersetzen", tr_auto_hint:"Repos in einer anderen Sprache werden auf {lang} angezeigt. Nutzt deine verbundene KI, sonst Google Übersetzer.", tr_on:"✓ an", tr_off:"aus", search_ph:"GitHub durchsuchen — voice agents, rag, topic:langchain…", t_search_clear:"Suche löschen", search_chip:"Suche", filters:"Filter", f_language:"Sprache", f_any:"Alle", f_stars:"Mindest-Sterne", f_updated:"Aktualisiert innerhalb", f_week:"7 Tage", f_month:"30 Tage", f_year:"ein Jahr", f_sort:"Sortieren nach", f_sort_updated:"Zuletzt aktualisiert", f_sort_stars:"Meiste Sterne", f_sort_match:"Beste Treffer", f_mcp:"Nur MCP-Server", f_license:"Lizenz", f_apply:"Anwenden", f_reset:"Zurücksetzen", no_results:"Nichts passt zu „{q}“.<br>Versuch ein anderes Wort oder weniger Filter.", toast_search:"Suche auf GitHub nach „{q}“"
+  ask_ai:"KI zu diesem Repo fragen", ask_ai_stack:"KI zu meiner Sammlung fragen", ask_ai_pack:"KI zu diesem Paket fragen", ask_ai_inapp:"Deine verbundene KI fragen", ask_ai_inapp_sub:"antwortet direkt hier, mit deinen MCP-Tools", chat_title:"Toolkit-Chat · {title}", chat_ph:"Frag alles über diese Repos…", chat_send:"Senden", chat_thinking:"Denkt nach…", chat_noai:"Verbinde Claude, ChatGPT oder Perplexity im Tab „Du“, um hier zu chatten.", chat_goconnect:"Verbindungen öffnen", chat_tools:"Tool verwendet", skill_ai:"Mit KI schreiben", skill_ai_sub:"eine bessere SKILL.md von deiner verbundenen KI", skill_ai_done:"Skill geschrieben von {provider}", ai_err:"KI-Fehler: {e}", ai_repo_q:"In 5 kurzen Stichpunkten: Was tut dieses Repo, für wen ist es, und wie installiere und nutze ich es? Dann ein Satz, warum es in ein KI-Toolkit gehört.", route_loading:"{repo} wird von GitHub geladen…", route_notfound:"Dieses Repo gibt es auf GitHub nicht.", route_badpack:"Kein Paket mit diesem Namen.", shared_stack:"Geteilte Sammlung", shared_hint:"{n} Repos · geteilt am {date} · tippe auf +, um eins hinzuzufügen, oder füge alle deiner Sammlung hinzu.", shared_add_all:"Alle zu meiner Sammlung hinzufügen", shared_fail:"Dieser Teilen-Link ist abgelaufen oder existiert nicht.", pack_share:"Paket-Link kopieren", pack_link_copied:"Paket-Link kopiert ✓", repo_pinned:"{name} kommt zuerst — swipe, um zu entscheiden.", tr_from:"übersetzt aus {lang}", tr_show:"Übersetzung zeigen", tr_tap:"Tippen für das Original", tr_auto:"Repos automatisch übersetzen", tr_auto_hint:"Repos in einer anderen Sprache werden auf {lang} angezeigt. Nutzt deine verbundene KI, sonst Google Übersetzer.", tr_on:"✓ an", tr_off:"aus", search_ph:"GitHub durchsuchen — voice agents, rag, topic:langchain…", t_search_clear:"Suche löschen", search_chip:"Suche", filters:"Filter", f_language:"Sprache", f_any:"Alle", f_stars:"Mindest-Sterne", f_updated:"Aktualisiert innerhalb", f_week:"7 Tage", f_month:"30 Tage", f_year:"ein Jahr", f_sort:"Sortieren nach", f_sort_updated:"Zuletzt aktualisiert", f_sort_stars:"Meiste Sterne", f_sort_match:"Beste Treffer", f_mcp:"Nur MCP-Server", f_license:"Lizenz", f_apply:"Anwenden", f_reset:"Zurücksetzen", no_results:"Nichts passt zu „{q}“.<br>Versuch ein anderes Wort oder weniger Filter.", toast_search:"Suche auf GitHub nach „{q}“", snap_info:"Feed-Snapshot vor {ago} aktualisiert · Live-GitHub obendrauf", snap_live:"Live-GitHub-Feed (noch kein Snapshot)", sm_zip:"Alles als .zip", sm_zip_sub:"Liste, MCP-Konfig, Backup, CSV + eine SKILL.md pro Repo", sm_share:"Teilen / In Drive speichern…", sm_share_sub:"Teilen-Menü: Google Drive, Dateien, AirDrop, Mail", toast_zip:"{n} Dateien gezippt ✓", toast_shared:"Geteilt ✓", toast_share_fallback:"Dateien teilen geht hier nicht — stattdessen heruntergeladen", stack_search_ph:"Deine Sammlung durchsuchen…", grp_all:"Alle", grp_none:"Ohne Gruppe", grp_new:"Neue Gruppe", grp_new_ph:"Gruppenname", grp_auto:"Nach KI-Kategorie gruppieren", grp_pick:"{name} verschieben nach…", grp_remove:"Keine Gruppe", grp_delete:"Gruppe löschen", toast_group_new:"Gruppe „{g}“ erstellt", toast_moved:"{name} → {g}", toast_ungrouped:"{name} aus der Gruppe entfernt", toast_auto:"{n} Repos gruppiert", toast_group_deleted:"Gruppe „{g}“ gelöscht — ihre Repos sind ohne Gruppe", stack_nomatch:"Kein Repo passt zu „{q}“.", grp_ungrouped_md:"Ohne Gruppe"
  },
  zh:{
   tagline:"爱上代码", quiz_q:"你的职业是什么？立即获取你的入门礼包：",
@@ -739,7 +752,7 @@ const I18N={
   pack_lower:"礼包",
   sec_ai:"AI 连接", ai_claude:"Claude", ai_openai:"ChatGPT", ai_pplx:"Perplexity", ai_key_ph:"粘贴 API 密钥", ai_connect:"连接", ai_connected_model:"已连接 · {model}", ai_connected:"已连接", ai_disconnect:"断开", ai_rejected:"该密钥被拒绝。", ai_hint:"密钥仅保存在本设备、仅发送给对应服务商，且绝不会包含在备份中。这是使用你自己账户的方式：claude.ai、ChatGPT 和 Perplexity 都不提供第三方登录。", ai_get_key:"获取密钥", ai_default:"应用内回答的默认 AI", ai_auto:"自动（首个已连接）",
   sec_mcp:"MCP 服务器", mcp_hint:"添加远程 MCP 服务器（https）。Claude 会在工具箱聊天中将其作为工具使用。运行在你电脑上的服务器无法从手机或浏览器访问。", mcp_name_ph:"名称", mcp_url_ph:"https://…/mcp", mcp_token_ph:"Bearer 令牌（可选）", mcp_add:"添加并测试", mcp_ok:"已连接 · {n} 个工具", mcp_saved:"已保存 — 无法在此测试，Claude 仍可访问", mcp_fail:"无响应 — 请检查 URL", mcp_none:"还没有 MCP 服务器。",
-  ask_ai:"向 AI 询问此仓库", ask_ai_stack:"向 AI 询问我的收藏", ask_ai_pack:"向 AI 询问此礼包", ask_ai_inapp:"询问你已连接的 AI", ask_ai_inapp_sub:"就在这里回答，可使用你的 MCP 工具", chat_title:"工具箱聊天 · {title}", chat_ph:"随便问关于这些仓库的问题…", chat_send:"发送", chat_thinking:"思考中…", chat_noai:"在「我的」标签连接 Claude、ChatGPT 或 Perplexity 后即可在此聊天。", chat_goconnect:"打开连接", chat_tools:"使用了工具", skill_ai:"用 AI 撰写", skill_ai_sub:"由你已连接的 AI 生成更好的 SKILL.md", skill_ai_done:"Skill 由 {provider} 撰写", ai_err:"AI 错误：{e}", ai_repo_q:"用 5 个简短要点说明：这个仓库做什么、适合谁、如何安装和使用？然后用一句话说明它为什么值得放进 AI 工具箱。", route_loading:"正在从 GitHub 获取 {repo}…", route_notfound:"GitHub 上不存在该仓库。", route_badpack:"没有这个名称的礼包。", shared_stack:"共享收藏", shared_hint:"{n} 个仓库 · 分享于 {date} · 点击 + 添加一个，或全部加入你的收藏。", shared_add_all:"全部加入我的收藏", shared_fail:"该分享链接已失效或不存在。", pack_share:"复制礼包链接", pack_link_copied:"礼包链接已复制 ✓", repo_pinned:"{name} 排在最前 — 滑动来决定。", tr_from:"译自{lang}", tr_show:"显示翻译", tr_tap:"点击查看原文", tr_auto:"自动翻译仓库", tr_auto_hint:"其他语言的仓库会以{lang}显示。优先使用你已连接的 AI，否则使用 Google 翻译。", tr_on:"✓ 开", tr_off:"关", search_ph:"搜索 GitHub — voice agents、rag、topic:langchain…", t_search_clear:"清除搜索", search_chip:"搜索", filters:"筛选", f_language:"语言", f_any:"不限", f_stars:"最低星标", f_updated:"更新时间", f_week:"7 天内", f_month:"30 天内", f_year:"一年内", f_sort:"排序", f_sort_updated:"最近更新", f_sort_stars:"星标最多", f_sort_match:"最佳匹配", f_mcp:"仅 MCP 服务器", f_license:"许可证", f_apply:"应用", f_reset:"重置", no_results:"没有与“{q}”匹配的仓库。<br>换个词或减少筛选条件。", toast_search:"正在 GitHub 搜索“{q}”"
+  ask_ai:"向 AI 询问此仓库", ask_ai_stack:"向 AI 询问我的收藏", ask_ai_pack:"向 AI 询问此礼包", ask_ai_inapp:"询问你已连接的 AI", ask_ai_inapp_sub:"就在这里回答，可使用你的 MCP 工具", chat_title:"工具箱聊天 · {title}", chat_ph:"随便问关于这些仓库的问题…", chat_send:"发送", chat_thinking:"思考中…", chat_noai:"在「我的」标签连接 Claude、ChatGPT 或 Perplexity 后即可在此聊天。", chat_goconnect:"打开连接", chat_tools:"使用了工具", skill_ai:"用 AI 撰写", skill_ai_sub:"由你已连接的 AI 生成更好的 SKILL.md", skill_ai_done:"Skill 由 {provider} 撰写", ai_err:"AI 错误：{e}", ai_repo_q:"用 5 个简短要点说明：这个仓库做什么、适合谁、如何安装和使用？然后用一句话说明它为什么值得放进 AI 工具箱。", route_loading:"正在从 GitHub 获取 {repo}…", route_notfound:"GitHub 上不存在该仓库。", route_badpack:"没有这个名称的礼包。", shared_stack:"共享收藏", shared_hint:"{n} 个仓库 · 分享于 {date} · 点击 + 添加一个，或全部加入你的收藏。", shared_add_all:"全部加入我的收藏", shared_fail:"该分享链接已失效或不存在。", pack_share:"复制礼包链接", pack_link_copied:"礼包链接已复制 ✓", repo_pinned:"{name} 排在最前 — 滑动来决定。", tr_from:"译自{lang}", tr_show:"显示翻译", tr_tap:"点击查看原文", tr_auto:"自动翻译仓库", tr_auto_hint:"其他语言的仓库会以{lang}显示。优先使用你已连接的 AI，否则使用 Google 翻译。", tr_on:"✓ 开", tr_off:"关", search_ph:"搜索 GitHub — voice agents、rag、topic:langchain…", t_search_clear:"清除搜索", search_chip:"搜索", filters:"筛选", f_language:"语言", f_any:"不限", f_stars:"最低星标", f_updated:"更新时间", f_week:"7 天内", f_month:"30 天内", f_year:"一年内", f_sort:"排序", f_sort_updated:"最近更新", f_sort_stars:"星标最多", f_sort_match:"最佳匹配", f_mcp:"仅 MCP 服务器", f_license:"许可证", f_apply:"应用", f_reset:"重置", no_results:"没有与“{q}”匹配的仓库。<br>换个词或减少筛选条件。", toast_search:"正在 GitHub 搜索“{q}”", snap_info:"信息流快照于 {ago} 前更新 · 实时 GitHub 叠加其上", snap_live:"实时 GitHub 信息流（尚无快照）", sm_zip:"全部打包为 .zip", sm_zip_sub:"列表、MCP 配置、备份、CSV + 每个仓库一个 SKILL.md", sm_share:"分享 / 保存到云端硬盘…", sm_share_sub:"系统分享面板：Google 云端硬盘、文件、隔空投送、邮件", toast_zip:"已打包 {n} 个文件 ✓", toast_shared:"已分享 ✓", toast_share_fallback:"此处无法分享文件 — 已改为下载", stack_search_ph:"搜索你的收藏…", grp_all:"全部", grp_none:"未分组", grp_new:"新建分组", grp_new_ph:"分组名称", grp_auto:"按 AI 类别自动分组", grp_pick:"将 {name} 移到…", grp_remove:"不分组", grp_delete:"删除分组", toast_group_new:"已创建分组“{g}”", toast_moved:"{name} → {g}", toast_ungrouped:"已将 {name} 移出分组", toast_auto:"已为 {n} 个仓库分组", toast_group_deleted:"分组“{g}”已删除 — 其中的仓库变为未分组", stack_nomatch:"没有与“{q}”匹配的仓库。", grp_ungrouped_md:"未分组"
  }
 };
 const GROUP_L10N={
@@ -800,7 +813,7 @@ const MAX_PAGES=10;
 const SEED = __SEED__;
 
 // ---------- persistent state ----------
-function defaults(){return {stack:[], swipes:{}, reviewed:0, rightSwipes:0, langCounts:{}, channelsOn:{mcp:true,claude:true,agents:true,awesome:true,trend:false,hot:true}, customChannels:[], ghToken:null, deviceToken:null, splashSeen:false, seeded2:false, packGot:{}, achUnlocked:{}, lang:"", ai:{claudeKey:null,claudeModel:"",openaiKey:null,openaiModel:"",pplxKey:null,provider:"auto"}, mcpServers:[], autoTranslate:true, searchQ:"", filters:{lang:"",stars:0,pushed:"",sort:"updated",mcp:false,license:""}};}
+function defaults(){return {stack:[], swipes:{}, reviewed:0, rightSwipes:0, langCounts:{}, channelsOn:{mcp:true,claude:true,agents:true,awesome:true,trend:false,hot:true}, customChannels:[], ghToken:null, deviceToken:null, splashSeen:false, seeded2:false, packGot:{}, achUnlocked:{}, lang:"", ai:{claudeKey:null,claudeModel:"",openaiKey:null,openaiModel:"",pplxKey:null,provider:"auto"}, mcpServers:[], autoTranslate:true, searchQ:"", filters:{lang:"",stars:0,pushed:"",sort:"updated",mcp:false,license:""}, groups:[]};}
 let S = defaults();
 try{ const raw=localStorage.getItem(LS_KEY); if(raw) S={...defaults(),...JSON.parse(raw)};
   else{ const v1=localStorage.getItem("reposwipe.v1"); if(v1){const o=JSON.parse(v1); S={...defaults(),...o}; } }
@@ -815,6 +828,7 @@ if(!S.ai||typeof S.ai!=="object")S.ai={claudeKey:null,claudeModel:"",openaiKey:n
 if(!Array.isArray(S.mcpServers))S.mcpServers=[];
 if(S.autoTranslate===undefined)S.autoTranslate=true;
 if(typeof S.searchQ!=="string")S.searchQ="";
+if(!Array.isArray(S.groups))S.groups=[];
 if(!S.filters||typeof S.filters!=="object")S.filters={lang:"",stars:0,pushed:"",sort:"updated",mcp:false,license:""};
 function save(){ try{ localStorage.setItem(LS_KEY, JSON.stringify(S)); }catch(e){} try{checkAch();}catch(e){} }
 if(!S.seeded2){
@@ -1339,6 +1353,28 @@ async function fetchAwesomePage(p){
   return results.filter(r=>r.status==="fulfilled").map(r=>r.value);
 }
 
+// ---------- snapshot feed: static JSON refreshed hourly by the deploy workflow (snapshot.py) ----------
+// The first pages of every channel, the Awesome lists and all packs come from here: zero API calls for a visitor's
+// first cards, no rate limit, works for anonymous users. The live GitHub API is layered on top (later pages, searches,
+// custom channels, READMEs). Missing or failed snapshot → everything silently goes live as before.
+const SNAP_PAGE=30, SNAP_PAGES=3;
+let snap=null, snapMeta=null, snapLoad=null;
+function snapshotBases(){const b=[];if(/^https?:$/.test(location.protocol)&&!/reposwipe\.local$/.test(location.hostname))b.push(location.origin);if(b[0]!==SITE_ORIGIN)b.push(SITE_ORIGIN);return b;}
+async function snapGet(name){
+  for(const base of snapshotBases()){try{const res=await fetch(base+"/data/"+name,{cache:"no-cache"});if(res.ok)return await res.json();}catch(e){}}
+  return null;
+}
+function loadSnapshot(){
+  if(snapLoad)return snapLoad;
+  snapLoad=(async()=>{
+    const [c,a]=await Promise.all([snapGet("channels.json"),snapGet("awesome.json")]);
+    if(c&&c.channels){snap={channels:c.channels,awesome:(a&&a.repos)||[],generated:c.generated||null};snapMeta=snap.generated;}
+    return snap;
+  })();
+  return snapLoad;
+}
+function snapSlice(list,p){return (list||[]).slice((p-1)*SNAP_PAGE,p*SNAP_PAGE);}
+
 // ---------- search + filters: drive the live feed with your own query and qualifiers ----------
 const FILTER_LANGS=["Python","TypeScript","JavaScript","Go","Rust","Java","C#","C++","C","Swift","Kotlin","Ruby","PHP","Shell","Dart","Jupyter Notebook"];
 const FILTER_LICENSES=[["mit","MIT"],["apache-2.0","Apache-2.0"],["gpl-3.0","GPL-3.0"],["bsd-3-clause","BSD-3"],["mpl-2.0","MPL-2.0"],["agpl-3.0","AGPL-3.0"]];
@@ -1374,8 +1410,10 @@ async function fetchPage(p){
   const suffix=filterSuffix();
   if(S.searchQ)return searchJob(S.searchQ+" "+suffix,p);
   const on=allChannels().filter(c=>S.channelsOn[c.key]);
+  const sn=p<=SNAP_PAGES?await loadSnapshot():null;
   const jobs=[];
   for(const c of on){
+    if(sn){const list=c.key==="awesome"?sn.awesome:sn.channels[c.key];const sl=snapSlice(list,p);if(sl.length){jobs.push(Promise.resolve(sl));continue;}}
     if(c.key==="awesome"){jobs.push(fetchAwesomePage(p).catch(()=>[]));continue;}
     for(const q of c.qs)jobs.push(searchJob(q+" "+suffix,p));
   }
@@ -1687,12 +1725,18 @@ function updateMeta(){
 }
 
 // ---------- save to computer ----------
+function bytesToBase64(u8){let b="";for(let i=0;i<u8.length;i+=0x8000)b+=String.fromCharCode.apply(null,u8.subarray(i,i+0x8000));return btoa(b);}
 async function saveFile(filename, content, mime){
-  if(NATIVE){ nativeSend({type:"save",name:filename,content:String(content),mime:mime||"text/plain"}); toast(t("toast_saved",{f:filename})); return true; }
+  const binary=content instanceof Uint8Array||content instanceof Blob;
+  if(NATIVE){
+    if(binary){const u8=content instanceof Blob?new Uint8Array(await content.arrayBuffer()):content;nativeSend({type:"save",name:filename,content:bytesToBase64(u8),mime:mime||"application/octet-stream",encoding:"base64"});}
+    else nativeSend({type:"save",name:filename,content:String(content),mime:mime||"text/plain"});
+    toast(t("toast_saved",{f:filename})); return true;
+  }
   try{
     if(window.showSaveFilePicker){
       const ext="."+filename.split(".").pop();
-      const handle=await window.showSaveFilePicker({suggestedName:filename, types:[{description:filename.endsWith(".md")?"Markdown":"JSON", accept:{[mime]:[ext]}}]});
+      const handle=await window.showSaveFilePicker({suggestedName:filename, types:[{description:filename.endsWith(".md")?"Markdown":filename.endsWith(".zip")?"Zip archive":"JSON", accept:{[mime]:[ext]}}]});
       const w=await handle.createWritable(); await w.write(content); await w.close();
       toast(t("toast_saved",{f:filename})); return true;
     }
@@ -1709,9 +1753,14 @@ async function saveFile(filename, content, mime){
 }
 function sortedStack(){return [...S.stack].sort((a,b)=>Number(b.superLike)-Number(a.superLike)||b.at-a.at);}
 function buildMarkdown(){
-  const sorted=sortedStack();
-  return ["# My RepoSwipe Stack","",`Exported ${new Date().toISOString().slice(0,10)} · ${sorted.length} repos`,""]
-    .concat(sorted.map(s=>`- ${s.superLike?"⭐ ":""}[${s.repo.full_name}](${s.repo.html_url}) — ${s.repo.description||""}`)).join("\n")+"\n";
+  const sorted=sortedStack(), line=s=>`- ${s.superLike?"⭐ ":""}[${s.repo.full_name}](${s.repo.html_url}) — ${s.repo.description||""}`;
+  const out=["# My RepoSwipe Stack","",`Exported ${new Date().toISOString().slice(0,10)} · ${sorted.length} repos`,""];
+  if((S.groups||[]).length){
+    for(const g of S.groups){const items=sorted.filter(s=>s.group===g.id);if(!items.length)continue;out.push("## "+g.name,"",...items.map(line),"");}
+    const rest=sorted.filter(s=>!s.group||!groupName(s.group));if(rest.length)out.push("## "+t("grp_ungrouped_md"),"",...rest.map(line),"");
+    return out.join("\n");
+  }
+  return out.concat(sorted.map(line)).join("\n")+"\n";
 }
 function buildMcpConfig(){
   const servers={};
@@ -1745,6 +1794,54 @@ async function saveAllToFolder(){
     }
   }catch(e){ if(e&&e.name==="AbortError")return; }
   for(const [name,content,mime] of exportFiles()){ await saveFile(name,content,mime); await new Promise(r=>setTimeout(r,450)); }
+}
+// ---------- zip writer (store method, CRC-32) — no library, works offline, opens anywhere ----------
+const CRC_TABLE=(()=>{const t=new Uint32Array(256);for(let n=0;n<256;n++){let c=n;for(let k=0;k<8;k++)c=c&1?(0xEDB88320^(c>>>1)):(c>>>1);t[n]=c>>>0;}return t;})();
+function crc32(u8){let c=0xFFFFFFFF;for(let i=0;i<u8.length;i++)c=CRC_TABLE[(c^u8[i])&0xFF]^(c>>>8);return (c^0xFFFFFFFF)>>>0;}
+function buildZip(files){ // files: [[name, string|Uint8Array], …] → Uint8Array
+  const enc=new TextEncoder(), parts=[], central=[]; let offset=0;
+  const d=new Date(), dosTime=((d.getHours()<<11)|(d.getMinutes()<<5)|(d.getSeconds()>>1))&0xFFFF, dosDate=(((d.getFullYear()-1980)<<9)|((d.getMonth()+1)<<5)|d.getDate())&0xFFFF;
+  const u32=(v)=>[v&255,(v>>>8)&255,(v>>>16)&255,(v>>>24)&255], u16=(v)=>[v&255,(v>>>8)&255];
+  for(const [name,content] of files){
+    const nameB=enc.encode(name), data=typeof content==="string"?enc.encode(content):content, crc=crc32(data);
+    const local=new Uint8Array([0x50,0x4B,0x03,0x04,20,0,0,8,0,0,...u16(dosTime),...u16(dosDate),...u32(crc),...u32(data.length),...u32(data.length),...u16(nameB.length),0,0]);
+    parts.push(local,nameB,data);
+    central.push(new Uint8Array([0x50,0x4B,0x01,0x02,20,0,20,0,0,8,0,0,...u16(dosTime),...u16(dosDate),...u32(crc),...u32(data.length),...u32(data.length),...u16(nameB.length),0,0,0,0,0,0,0,0,0,0,0,0,...u32(offset)]),nameB); // extra, comment, disk, int attr, ext attr = 12 zero bytes
+    offset+=local.length+nameB.length+data.length;
+  }
+  const cdStart=offset, cdLen=central.reduce((n,x)=>n+x.length,0);
+  const end=new Uint8Array([0x50,0x4B,0x05,0x06,0,0,0,0,...u16(files.length),...u16(files.length),...u32(cdLen),...u32(cdStart),0,0]);
+  const all=[...parts,...central,end], out=new Uint8Array(all.reduce((n,x)=>n+x.length,0)); let o=0;
+  for(const x of all){out.set(x,o);o+=x.length;}
+  return out;
+}
+function buildCsv(){
+  const q=v=>'"'+String(v==null?"":v).replace(/"/g,'""')+'"';
+  const rows=[["full_name","url","description","language","stars","topics","super_like","group","saved_at"].join(",")];
+  for(const s of sortedStack()){const r=s.repo;rows.push([q(r.full_name),q(r.html_url),q(r.description||""),q(r.language||""),r.stargazers_count||0,q((r.topics||[]).join(" ")),s.superLike?1:0,q(groupName(s.group)),q(new Date(s.at).toISOString())].join(","));}
+  return rows.join("\n")+"\n";
+}
+// The whole Stack as one archive: list, MCP config, backup, CSV and a ready-to-save SKILL.md for every repo
+function buildStackZip(){
+  const files=[["README.txt","RepoSwipe Stack export — "+new Date().toISOString().slice(0,10)+"\n\nreposwipe-stack.md   your Stack as a Markdown list\nmcp-servers.json     best-guess mcpServers config\nreposwipe-backup.json restore from the You tab\nstack.csv            spreadsheet-friendly\nskills/<repo>-SKILL.md one skill per repo (written from each repo's description; open the repo in RepoSwipe → Make a Skill for a README-based version)\n\nhttps://swipe.yeete.ai\n"],
+    ["reposwipe-stack.md",buildMarkdown()],["mcp-servers.json",buildMcpConfig()],["reposwipe-backup.json",buildBackup()],["stack.csv",buildCsv()]];
+  const seen=new Set();
+  for(const s of sortedStack()){let slug=skillSlug(s.repo.name);if(seen.has(slug))slug=skillSlug(s.repo.full_name);seen.add(slug);files.push(["skills/"+slug+"-SKILL.md",buildSkill(s.repo,null)]);}
+  return {name:"reposwipe-stack-"+new Date().toISOString().slice(0,10)+".zip",bytes:buildZip(files),count:files.length};
+}
+async function exportStackZip(){
+  if(!S.stack.length){toast(t("toast_swipe_first"));return;}
+  const z=buildStackZip(); await saveFile(z.name,z.bytes,"application/zip"); toast(t("toast_zip",{n:z.count}));
+}
+// Share sheet with the zip attached: on phones that's Google Drive / Files / AirDrop / mail; desktops fall back to a download
+async function shareStackZip(){
+  if(!S.stack.length){toast(t("toast_swipe_first"));return;}
+  const z=buildStackZip();
+  try{
+    const file=new File([z.bytes],z.name,{type:"application/zip"});
+    if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],title:"My RepoSwipe Stack"});toast(t("toast_shared"));return;}
+  }catch(e){ if(e&&e.name==="AbortError")return; }
+  toast(t("toast_share_fallback")); await saveFile(z.name,z.bytes,"application/zip");
 }
 async function importBackup(file){
   try{
@@ -1869,6 +1966,8 @@ const packCache=new Map();
 let openPackId=null, packActive=null;
 async function fetchPack(p){
   if(packCache.has(p.id))return packCache.get(p.id);
+  const sj=await snapGet("packs/"+p.id+".json"); // hourly snapshot first — instant, no API quota
+  if(sj&&Array.isArray(sj.repos)&&sj.repos.length){const top=sj.repos.slice(0,20);packCache.set(p.id,top);return top;}
   // Two live sources, merged: hand-picked essentials (hydrated via /repos, pinned on top)
   // plus star-ranked topic searches. Picks keep the pack strong even when search runs thin.
   const searchJobs=p.qs.map(q=>
@@ -2104,39 +2203,110 @@ function buildQuiz(){
 }
 buildQuiz();
 
+// ---------- stack groups: fold your Stack into named groups; search across it ----------
+function groupName(id){const g=(S.groups||[]).find(x=>x.id===id);return g?g.name:"";}
+function addGroup(name){name=String(name||"").trim().slice(0,32);if(!name)return null;const ex=(S.groups||[]).find(g=>g.name.toLowerCase()===name.toLowerCase());if(ex)return ex;const g={id:"g_"+Date.now().toString(36)+Math.random().toString(36).slice(2,6),name};S.groups.push(g);save();return g;}
+function deleteGroup(id){const g=(S.groups||[]).find(x=>x.id===id);if(!g)return;S.groups=S.groups.filter(x=>x.id!==id);S.stack.forEach(s=>{if(s.group===id)delete s.group;});if(stackGroup===id)stackGroup="";save();toast(t("toast_group_deleted",{g:g.name}));}
+function setItemGroup(repoId,gid){const s=S.stack.find(x=>x.repo.id===repoId);if(!s)return;if(gid)s.group=gid;else delete s.group;save();}
+function groupCount(id){return S.stack.filter(s=>id==="__none"?!s.group:s.group===id).length;}
+// One tap: ungrouped repos get a group per AI Score category (MCP servers, AI agents, AI coding, Memory / RAG, Automation, Learning)
+function autoGroup(){
+  let n=0;
+  for(const s of S.stack){
+    if(s.group&&groupName(s.group))continue;
+    const r=s.repo, hay=r.full_name+" "+(r.description||"")+" "+(r.topics||[]).join(" ");
+    const cat=AI_CATS.find(c=>c.re.test(hay)); if(!cat)continue;
+    const g=addGroup(catLabel(cat)); s.group=g.id; n++;
+  }
+  save(); toast(t("toast_auto",{n})); return n;
+}
+let stackQ="", stackGroup="";
+function stackMatches(s,q){
+  if(stackGroup==="__none"&&s.group)return false;
+  if(stackGroup&&stackGroup!=="__none"&&s.group!==stackGroup)return false;
+  if(!q)return true;
+  const r=s.repo, hay=(r.full_name+" "+(r.description||"")+" "+(r.language||"")+" "+(r.topics||[]).join(" ")+" "+groupName(s.group)).toLowerCase();
+  return q.toLowerCase().split(/\s+/).filter(Boolean).every(w=>hay.indexOf(w)>=0);
+}
+function openGroupPicker(repoId){
+  closeAiMenu();
+  const s=S.stack.find(x=>x.repo.id===repoId); if(!s)return;
+  const m=document.createElement("div"); m.id="aiMenu"; m.dataset.mode="group";
+  const rows=(S.groups||[]).map(g=>`<div class="grow${s.group===g.id?" on":""}" data-g="${g.id}"><span class="aie">${icon("folder")}</span><span class="gn">${esc(g.name)}</span><span class="gc">${groupCount(g.id)}</span><span class="gdel mini" data-del="${g.id}" title="${esc(t("grp_delete"))}">${icon("trash")}</span></div>`).join("");
+  m.innerHTML=`<div class="aisheet fsheet"><div class="aihead">${esc(t("grp_pick",{name:s.repo.name}))}</div>${rows}
+    <div class="grow${s.group?"":" on"}" data-g=""><span class="aie">${icon("x")}</span><span class="gn">${esc(t("grp_remove"))}</span></div>
+    <div class="grow" id="gNewRow"><span class="aie">${icon("plus")}</span><input class="tokinput" id="gNewName" placeholder="${esc(t("grp_new_ph"))}" style="font-family:inherit" maxlength="32"><button class="pbtn" id="gNewBtn">${esc(t("grp_new"))}</button></div></div>`;
+  m.addEventListener("click",e=>{
+    const del=e.target.closest&&e.target.closest("[data-del]"); if(del){e.stopPropagation();deleteGroup(del.dataset.del);closeAiMenu();renderStack();return;}
+    if(e.target.closest&&e.target.closest("#gNewRow")){ if(e.target.closest("#gNewBtn")){const g=addGroup(m.querySelector("#gNewName").value);if(g){setItemGroup(repoId,g.id);toast(t("toast_moved",{name:s.repo.name,g:g.name}));closeAiMenu();renderStack();}} return; }
+    const row=e.target.closest&&e.target.closest(".grow[data-g]");
+    if(row){const gid=row.dataset.g;setItemGroup(repoId,gid);toast(gid?t("toast_moved",{name:s.repo.name,g:groupName(gid)}):t("toast_ungrouped",{name:s.repo.name}));closeAiMenu();renderStack();return;}
+    if(e.target===m)closeAiMenu();
+  });
+  m.querySelector("#gNewName").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();m.querySelector("#gNewBtn").click();}});
+  document.body.appendChild(m); requestAnimationFrame(()=>m.classList.add("show"));
+}
+
 // ---------- stack ----------
 function renderStack(){
   const el=$("stackview");
   const sorted=sortedStack();
+  if(stackGroup&&stackGroup!=="__none"&&!groupName(stackGroup))stackGroup="";
+  const shown=sorted.filter(s=>stackMatches(s,stackQ));
+  const groups=S.groups||[], ungrouped=S.stack.filter(s=>!s.group).length;
+  const gchip=(id,label,n)=>`<button class="chchip${stackGroup===id?" on":""}" data-g="${esc(id)}">${label}${n!=null?` <span style="opacity:.7">${n}</span>`:""}</button>`;
   el.innerHTML=`<div class="vtitle">${t("your_stack")}</div>
+    <div class="stacktools">
+      <div class="searchbox${stackQ?" has":""}" id="stackSearchBox">${icon("search")}<input id="stackSearch" autocomplete="off" spellcheck="false" placeholder="${esc(t("stack_search_ph"))}" value="${esc(stackQ)}"><span class="sx" id="stackSearchClear">✕</span></div>
+      <div class="gchips" id="groupChips">${gchip("",t("grp_all"),S.stack.length)}${groups.map(g=>gchip(g.id,esc(g.name),groupCount(g.id))).join("")}${groups.length?gchip("__none",t("grp_none"),ungrouped):""}<button class="chchip" id="groupNewBtn">${icon("plus")} ${t("grp_new")}</button><input class="addinput" id="groupNewInput" placeholder="${esc(t("grp_new_ph"))}" maxlength="32"></div>
+    </div>
     <div class="btnrow">
       <button class="gbtn" id="linkBtn">${t("share_link")} ${icon("link")}</button>
       <button class="gbtn" id="saveBtn">${t("save")} ${icon("save")}</button>
       <button class="gbtn alt" id="mdBtn">${t("copy")}</button>
     </div>
-    <div class="btnrow"><button class="gbtn alt" id="askStackBtn">${icon("sparkle")} ${t("ask_ai_stack")}${aiProvider()?" · "+esc(aiLabel(aiProvider())):""}</button></div>
+    <div class="btnrow"><button class="gbtn alt" id="askStackBtn">${icon("sparkle")} ${t("ask_ai_stack")}${aiProvider()?" · "+esc(aiLabel(aiProvider())):""}</button>${ungrouped&&S.stack.length>=3?`<button class="gbtn alt" id="autoGroupBtn" style="flex:0 0 auto">${icon("folderopen")} ${t("grp_auto")}</button>`:""}</div>
     <div class="glasscard" id="saveMenu" style="display:none">
       <div class="prow" style="cursor:pointer" id="saveMd"><div class="pname" style="flex:1">${icon("doc")} ${t("sm_md")}</div><div class="psub">reposwipe-stack.md</div></div>
       <div class="prow" style="cursor:pointer" id="saveCfg"><div class="pname" style="flex:1">${icon("plug")} ${t("sm_cfg")}</div><div class="psub">mcp-servers.json</div></div>
       <div class="prow" style="cursor:pointer" id="saveBak"><div class="pname" style="flex:1">${icon("archive")} ${t("sm_bak")}</div><div class="psub">reposwipe-backup.json</div></div>
+      <div class="prow" style="cursor:pointer" id="saveZip"><div class="pname" style="flex:1">${icon("package")} ${t("sm_zip")}</div><div class="psub">${t("sm_zip_sub")}</div></div>
+      <div class="prow" style="cursor:pointer" id="saveShare"><div class="pname" style="flex:1">${icon("cloud")} ${t("sm_share")}</div><div class="psub">${t("sm_share_sub")}</div></div>
       <div class="prow" style="cursor:pointer" id="saveAll"><div class="pname" style="flex:1">${icon("folderopen")} ${t("sm_all")}</div><div class="psub">${t("sm_all_sub")}</div></div>
     </div>
-    <div class="glasscard">${sorted.length?sorted.map((s,i)=>`
+    <div class="glasscard">${shown.length?shown.map((s,i)=>`
     <div class="srow" data-url="${esc(s.repo.html_url)}" style="animation-delay:${Math.min(i*40,400)}ms" title="${t("t_open")}"><img src="${esc(s.repo.owner.avatar_url)}" onerror="this.style.visibility='hidden'">
-      <div style="min-width:0"><div class="sn">${s.superLike?icon("star","stari")+" ":""}${esc(s.repo.full_name)}</div>
+      <div style="min-width:0"><div class="sn">${s.superLike?icon("star","stari")+" ":""}${esc(s.repo.full_name)}${s.group&&groupName(s.group)&&!stackGroup?`<span class="gtag">${esc(groupName(s.group))}</span>`:""}</div>
       <div class="sd">${s.repo.description?esc(s.repo.description):""}</div></div>
       <div class="rowbtns">
+        <button class="mini rowgroup" data-id="${s.repo.id}" title="${esc(t("grp_pick",{name:s.repo.name}))}">${icon("folder")}</button>
         <button class="mini rowfork" data-url="${esc(s.repo.html_url)}/fork" title="${t("t_fork")}">${icon("fork")}</button>
         <button class="mini rowclaude" data-url="${esc(s.repo.html_url)}" title="${t("t_claude")}">${icon("spark")}</button>
         <button class="mini rowai" data-url="${esc(s.repo.html_url)}" data-name="${esc(s.repo.name)}" data-desc="${esc(s.repo.description||"")}" title="${t("t_ai")}">${icon("bot")}</button>
         <button class="mini del" data-id="${s.repo.id}" title="${t("remove")}">${icon("trash")}</button>
       </div></div>`).join("")
+    :sorted.length?`<div class="empty"><span class="e">${icon("search")}</span>${t("stack_nomatch",{q:esc(stackQ)})}</div>`
     :`<div class="empty"><span class="e">${icon("heartcrack")}</span>${t("no_matches")}</div>`}</div>`;
   el.querySelectorAll(".srow[data-url]").forEach(row=>row.addEventListener("click",e=>{
     if(e.target.closest(".rowbtns"))return;
     window.open(row.dataset.url,"_blank","noopener");
   }));
   translateDescs(el);
+  // search + groups
+  const ss=el.querySelector("#stackSearch");
+  ss.addEventListener("input",()=>{stackQ=ss.value;const list=el.querySelector(".glasscard:last-of-type");el.querySelector("#stackSearchBox").classList.toggle("has",!!stackQ);
+    // live filter without a full re-render (keeps focus); rows carry their data-url → match against the stack entries
+    const rows=[...el.querySelectorAll(".srow[data-url]")];let any=false;
+    rows.forEach(row=>{const s=S.stack.find(x=>x.repo.html_url===row.dataset.url);const ok=!s||stackMatches(s,stackQ);row.style.display=ok?"":"none";if(ok)any=true;});
+    let ne=el.querySelector("#stackNoMatch");if(!any&&rows.length){if(!ne){ne=document.createElement("div");ne.id="stackNoMatch";ne.className="empty";list.appendChild(ne);}ne.innerHTML=`<span class="e">${icon("search")}</span>${t("stack_nomatch",{q:esc(stackQ)})}`;}else if(ne)ne.remove();});
+  ss.addEventListener("keydown",e=>{if(e.key==="Escape"){stackQ="";renderStack();}});
+  el.querySelector("#stackSearchClear").addEventListener("click",()=>{stackQ="";renderStack();});
+  el.querySelectorAll("#groupChips .chchip[data-g]").forEach(b=>b.addEventListener("click",()=>{stackGroup=b.dataset.g;renderStack();}));
+  const gnb=el.querySelector("#groupNewBtn"), gni=el.querySelector("#groupNewInput");
+  gnb.addEventListener("click",()=>{gni.classList.toggle("show");if(gni.classList.contains("show"))gni.focus();});
+  gni.addEventListener("keydown",e=>{if(e.key==="Enter"){const g=addGroup(gni.value);if(g){stackGroup=g.id;toast(t("toast_group_new",{g:g.name}));renderStack();}}if(e.key==="Escape")gni.classList.remove("show");});
+  el.querySelectorAll(".rowgroup").forEach(b=>b.addEventListener("click",e=>{e.stopPropagation();openGroupPicker(+b.dataset.id);}));
+  const ag=el.querySelector("#autoGroupBtn"); if(ag)ag.addEventListener("click",()=>{autoGroup();renderStack();});
   el.querySelectorAll(".del").forEach(b=>b.addEventListener("click",e=>{e.stopPropagation();S.stack=S.stack.filter(s=>s.repo.id!==+b.dataset.id);save();renderStack();updateMeta();}));
   el.querySelectorAll(".rowfork").forEach(b=>b.addEventListener("click",e=>{e.stopPropagation();window.open(b.dataset.url,"_blank","noopener");}));
   el.querySelectorAll(".rowclaude").forEach(b=>b.addEventListener("click",e=>{e.stopPropagation();window.open(claudeUrl(b.dataset.url),"_blank","noopener");}));
@@ -2152,6 +2322,8 @@ function renderStack(){
   $("saveCfg").addEventListener("click",()=>{void saveFile("mcp-servers.json",buildMcpConfig(),"application/json");$("saveMenu").style.display="none";});
   $("saveBak").addEventListener("click",()=>{void saveFile("reposwipe-backup.json",buildBackup(),"application/json");$("saveMenu").style.display="none";});
   $("saveAll").addEventListener("click",()=>{void saveAllToFolder();$("saveMenu").style.display="none";});
+  $("saveZip").addEventListener("click",()=>{void exportStackZip();$("saveMenu").style.display="none";});
+  $("saveShare").addEventListener("click",()=>{void shareStackZip();$("saveMenu").style.display="none";});
 }
 
 // ---------- profile ----------
@@ -2181,7 +2353,7 @@ function renderProfile(){
       </div>
       ${AI_CATS.map(c=>{const h=catHits(c);return `<div class="catrow"><div class="cl">${icon(c.ic)} ${catLabel(c)}</div><div class="catbar"><i style="width:${Math.min(100,h*34)}%"></i></div><div style="width:30px;text-align:right;color:var(--muted);font-weight:800">${h?h+"✓":"—"}</div>${h===0?`<button class="fixbtn" data-cat="${c.id}">${t("fix")} +</button>`:""}</div><div class="gapslot" data-slot="${c.id}"></div>`;}).join("")}
     </div>
-    <div class="seclabel">${t("sec_github")}</div><div class="glasscard">${gh}</div>
+    <div class="seclabel">${t("sec_github")}</div><div class="glasscard">${gh}<div class="ratebar" id="snapInfo" style="border-top:1px solid rgba(122,111,168,.12)">${snapMeta?esc(t("snap_info",{ago:ago(snapMeta)})):esc(t("snap_live"))}</div></div>
     <div class="seclabel" id="aiConnSec">${t("sec_ai")}</div><div class="glasscard">
       ${["claude","openai","pplx"].map(p=>{const k=aiKey(p),P=AI_PROVIDERS[p];const model=p==="claude"?S.ai.claudeModel:p==="openai"?S.ai.openaiModel:"sonar";return k?`
       <div class="prow" data-ai="${p}"><div class="pname" style="flex:1">${icon(P.ic)} ${esc(P.label)}<div class="psub">${esc(model?t("ai_connected_model",{model}):t("ai_connected"))}</div></div><button class="pbtn ghost aiout" data-ai="${p}">${t("ai_disconnect")}</button></div>`:`
