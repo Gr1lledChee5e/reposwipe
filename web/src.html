@@ -265,6 +265,9 @@
   .aipre{font-family:ui-monospace,Menlo,monospace; font-size:11px; white-space:pre-wrap; background:var(--code); border:1px solid var(--stroke); border-radius:10px; padding:8px; margin:6px 0;}
   .chatmsg code, .aians code{font-family:ui-monospace,Menlo,monospace; font-size:11px; background:var(--code); padding:1px 5px; border-radius:6px;}
   .aipill{font-size:9px; font-weight:800; letter-spacing:.4px; color:#E9D5FF; background:linear-gradient(135deg,rgba(139,92,246,.4),rgba(192,38,211,.3)); border:1px solid rgba(192,132,252,.5); border-radius:999px; padding:2px 7px; margin-left:6px; vertical-align:1px;}
+  .trpill{display:inline-flex;align-items:center;gap:4px;font-size:9.5px;font-weight:800;color:#E9D5FF;background:rgba(139,92,246,.22);border:1px solid rgba(192,132,252,.4);border-radius:999px;padding:1px 7px;margin-left:4px;cursor:pointer;vertical-align:1px;white-space:nowrap;line-height:1.4}
+  .trpill .svgi{width:10px;height:10px}
+  .readme .trpill{display:inline-flex;margin:0 0 6px}
   .pe .svgi{width:26px;height:26px;color:var(--accent2);}
   .empty .e .svgi{width:46px;height:46px;color:var(--accent2);}
   .achcard .e .svgi{width:22px;height:22px;color:var(--accent2);}
@@ -487,7 +490,7 @@ const I18N={
   pack_lower:"pack",
   sec_ai:"AI CONNECTIONS", ai_claude:"Claude", ai_openai:"ChatGPT", ai_pplx:"Perplexity", ai_key_ph:"Paste API key", ai_connect:"Connect", ai_connected_model:"Connected · {model}", ai_connected:"Connected", ai_disconnect:"Disconnect", ai_rejected:"That key was rejected.", ai_hint:"Your keys stay on this device, are sent only to that provider, and are never included in backups. This is the way to use your own account: there is no third-party login for claude.ai, ChatGPT or Perplexity.", ai_get_key:"Get a key", ai_default:"Default AI for in-app answers", ai_auto:"Auto (first connected)",
   sec_mcp:"MCP SERVERS", mcp_hint:"Add remote MCP servers (https). Claude uses them as tools inside Toolkit Chat. Servers running on your own computer can't be reached from a phone or browser.", mcp_name_ph:"Name", mcp_url_ph:"https://…/mcp", mcp_token_ph:"Bearer token (optional)", mcp_add:"Add & test", mcp_ok:"Connected · {n} tools", mcp_saved:"Saved — couldn't test from here, Claude can still reach it", mcp_fail:"No response — check the URL", mcp_none:"No MCP servers yet.",
-  ask_ai:"Ask AI about this repo", ask_ai_stack:"Ask AI about my Stack", ask_ai_pack:"Ask AI about this pack", ask_ai_inapp:"Ask your connected AI", ask_ai_inapp_sub:"answers right here, with your MCP tools", chat_title:"Toolkit chat · {title}", chat_ph:"Ask anything about these repos…", chat_send:"Send", chat_thinking:"Thinking…", chat_noai:"Connect Claude, ChatGPT or Perplexity in the You tab to chat here.", chat_goconnect:"Open connections", chat_tools:"used tool", skill_ai:"Write with AI", skill_ai_sub:"a better SKILL.md from your connected AI", skill_ai_done:"Skill written by {provider}", ai_err:"AI error: {e}", ai_repo_q:"In 5 short bullets: what does this repo do, who is it for, and how do I install and use it? Then one line on why it belongs in an AI toolkit.", route_loading:"Fetching {repo} from GitHub…", route_notfound:"That repo doesn't exist on GitHub.", route_badpack:"No pack with that name.", shared_stack:"Shared Stack", shared_hint:"{n} repos · shared {date} · tap + to add one, or add them all to your Stack.", shared_add_all:"Add all to my Stack", shared_fail:"That share link has expired or doesn't exist.", pack_share:"Copy pack link", pack_link_copied:"Pack link copied ✓", repo_pinned:"{name} is up first — swipe to decide."
+  ask_ai:"Ask AI about this repo", ask_ai_stack:"Ask AI about my Stack", ask_ai_pack:"Ask AI about this pack", ask_ai_inapp:"Ask your connected AI", ask_ai_inapp_sub:"answers right here, with your MCP tools", chat_title:"Toolkit chat · {title}", chat_ph:"Ask anything about these repos…", chat_send:"Send", chat_thinking:"Thinking…", chat_noai:"Connect Claude, ChatGPT or Perplexity in the You tab to chat here.", chat_goconnect:"Open connections", chat_tools:"used tool", skill_ai:"Write with AI", skill_ai_sub:"a better SKILL.md from your connected AI", skill_ai_done:"Skill written by {provider}", ai_err:"AI error: {e}", ai_repo_q:"In 5 short bullets: what does this repo do, who is it for, and how do I install and use it? Then one line on why it belongs in an AI toolkit.", route_loading:"Fetching {repo} from GitHub…", route_notfound:"That repo doesn't exist on GitHub.", route_badpack:"No pack with that name.", shared_stack:"Shared Stack", shared_hint:"{n} repos · shared {date} · tap + to add one, or add them all to your Stack.", shared_add_all:"Add all to my Stack", shared_fail:"That share link has expired or doesn't exist.", pack_share:"Copy pack link", pack_link_copied:"Pack link copied ✓", repo_pinned:"{name} is up first — swipe to decide.", tr_from:"translated from {lang}", tr_show:"show translation", tr_tap:"Tap to see the original", tr_auto:"Auto-translate repos", tr_auto_hint:"Repos written in another language are shown in {lang}. Uses your connected AI when available, otherwise Google Translate.", tr_on:"✓ on", tr_off:"off"
  },
  es:{
   tagline:"enamórate del código", quiz_q:"¿Cuál es tu trabajo? Consigue tu pack inicial al instante:",
@@ -543,7 +546,7 @@ const I18N={
   pack_lower:"pack",
   sec_ai:"CONEXIONES DE IA", ai_claude:"Claude", ai_openai:"ChatGPT", ai_pplx:"Perplexity", ai_key_ph:"Pega la clave API", ai_connect:"Conectar", ai_connected_model:"Conectado · {model}", ai_connected:"Conectado", ai_disconnect:"Desconectar", ai_rejected:"Esa clave fue rechazada.", ai_hint:"Tus claves se quedan en este dispositivo, se envían solo a ese proveedor y nunca se incluyen en las copias de seguridad. Así se usa tu propia cuenta: no existe inicio de sesión de terceros para claude.ai, ChatGPT o Perplexity.", ai_get_key:"Obtener clave", ai_default:"IA predeterminada para respuestas en la app", ai_auto:"Automático (la primera conectada)",
   sec_mcp:"SERVIDORES MCP", mcp_hint:"Añade servidores MCP remotos (https). Claude los usa como herramientas en el chat. Los servidores de tu propio equipo no son accesibles desde un móvil o navegador.", mcp_name_ph:"Nombre", mcp_url_ph:"https://…/mcp", mcp_token_ph:"Token Bearer (opcional)", mcp_add:"Añadir y probar", mcp_ok:"Conectado · {n} herramientas", mcp_saved:"Guardado — no se pudo probar desde aquí, Claude aún puede acceder", mcp_fail:"Sin respuesta — revisa la URL", mcp_none:"Aún no hay servidores MCP.",
-  ask_ai:"Preguntar a la IA sobre este repo", ask_ai_stack:"Preguntar a la IA sobre mi Colección", ask_ai_pack:"Preguntar a la IA sobre este pack", ask_ai_inapp:"Preguntar a tu IA conectada", ask_ai_inapp_sub:"responde aquí mismo, con tus herramientas MCP", chat_title:"Chat del kit · {title}", chat_ph:"Pregunta lo que quieras sobre estos repos…", chat_send:"Enviar", chat_thinking:"Pensando…", chat_noai:"Conecta Claude, ChatGPT o Perplexity en la pestaña Tú para chatear aquí.", chat_goconnect:"Abrir conexiones", chat_tools:"usó la herramienta", skill_ai:"Escribir con IA", skill_ai_sub:"un SKILL.md mejor con tu IA conectada", skill_ai_done:"Skill escrita por {provider}", ai_err:"Error de IA: {e}", ai_repo_q:"En 5 viñetas cortas: ¿qué hace este repo, para quién es y cómo lo instalo y uso? Luego una línea sobre por qué merece estar en un kit de IA.", route_loading:"Obteniendo {repo} de GitHub…", route_notfound:"Ese repo no existe en GitHub.", route_badpack:"No hay ningún pack con ese nombre.", shared_stack:"Colección compartida", shared_hint:"{n} repos · compartida el {date} · toca + para añadir uno, o añádelos todos a tu Colección.", shared_add_all:"Añadir todos a mi Colección", shared_fail:"Ese enlace ha caducado o no existe.", pack_share:"Copiar enlace del pack", pack_link_copied:"Enlace del pack copiado ✓", repo_pinned:"{name} va primero — desliza para decidir."
+  ask_ai:"Preguntar a la IA sobre este repo", ask_ai_stack:"Preguntar a la IA sobre mi Colección", ask_ai_pack:"Preguntar a la IA sobre este pack", ask_ai_inapp:"Preguntar a tu IA conectada", ask_ai_inapp_sub:"responde aquí mismo, con tus herramientas MCP", chat_title:"Chat del kit · {title}", chat_ph:"Pregunta lo que quieras sobre estos repos…", chat_send:"Enviar", chat_thinking:"Pensando…", chat_noai:"Conecta Claude, ChatGPT o Perplexity en la pestaña Tú para chatear aquí.", chat_goconnect:"Abrir conexiones", chat_tools:"usó la herramienta", skill_ai:"Escribir con IA", skill_ai_sub:"un SKILL.md mejor con tu IA conectada", skill_ai_done:"Skill escrita por {provider}", ai_err:"Error de IA: {e}", ai_repo_q:"En 5 viñetas cortas: ¿qué hace este repo, para quién es y cómo lo instalo y uso? Luego una línea sobre por qué merece estar en un kit de IA.", route_loading:"Obteniendo {repo} de GitHub…", route_notfound:"Ese repo no existe en GitHub.", route_badpack:"No hay ningún pack con ese nombre.", shared_stack:"Colección compartida", shared_hint:"{n} repos · compartida el {date} · toca + para añadir uno, o añádelos todos a tu Colección.", shared_add_all:"Añadir todos a mi Colección", shared_fail:"Ese enlace ha caducado o no existe.", pack_share:"Copiar enlace del pack", pack_link_copied:"Enlace del pack copiado ✓", repo_pinned:"{name} va primero — desliza para decidir.", tr_from:"traducido del {lang}", tr_show:"ver traducción", tr_tap:"Toca para ver el original", tr_auto:"Traducir repos automáticamente", tr_auto_hint:"Los repos escritos en otro idioma se muestran en {lang}. Usa tu IA conectada si la hay; si no, Google Translate.", tr_on:"✓ sí", tr_off:"no"
  },
  fr:{
   tagline:"tombez amoureux du code", quiz_q:"Quel est votre métier ? Obtenez votre pack de démarrage instantanément :",
@@ -599,7 +602,7 @@ const I18N={
   pack_lower:"pack",
   sec_ai:"CONNEXIONS IA", ai_claude:"Claude", ai_openai:"ChatGPT", ai_pplx:"Perplexity", ai_key_ph:"Collez la clé API", ai_connect:"Connecter", ai_connected_model:"Connecté · {model}", ai_connected:"Connecté", ai_disconnect:"Déconnecter", ai_rejected:"Cette clé a été refusée.", ai_hint:"Vos clés restent sur cet appareil, ne sont envoyées qu'à ce fournisseur et ne figurent jamais dans les sauvegardes. C'est ainsi qu'on utilise son propre compte : il n'existe pas de connexion tierce pour claude.ai, ChatGPT ou Perplexity.", ai_get_key:"Obtenir une clé", ai_default:"IA par défaut pour les réponses dans l'app", ai_auto:"Auto (première connectée)",
   sec_mcp:"SERVEURS MCP", mcp_hint:"Ajoutez des serveurs MCP distants (https). Claude les utilise comme outils dans le chat. Les serveurs sur votre propre ordinateur ne sont pas joignables depuis un téléphone ou un navigateur.", mcp_name_ph:"Nom", mcp_url_ph:"https://…/mcp", mcp_token_ph:"Jeton Bearer (facultatif)", mcp_add:"Ajouter et tester", mcp_ok:"Connecté · {n} outils", mcp_saved:"Enregistré — impossible de tester d'ici, Claude peut quand même l'atteindre", mcp_fail:"Pas de réponse — vérifiez l'URL", mcp_none:"Aucun serveur MCP pour l'instant.",
-  ask_ai:"Demander à l'IA à propos de ce dépôt", ask_ai_stack:"Demander à l'IA à propos de ma Collection", ask_ai_pack:"Demander à l'IA à propos de ce pack", ask_ai_inapp:"Demander à votre IA connectée", ask_ai_inapp_sub:"répond ici même, avec vos outils MCP", chat_title:"Chat du kit · {title}", chat_ph:"Posez une question sur ces dépôts…", chat_send:"Envoyer", chat_thinking:"Réflexion…", chat_noai:"Connectez Claude, ChatGPT ou Perplexity dans l'onglet Vous pour discuter ici.", chat_goconnect:"Ouvrir les connexions", chat_tools:"outil utilisé", skill_ai:"Rédiger avec l'IA", skill_ai_sub:"un meilleur SKILL.md grâce à votre IA connectée", skill_ai_done:"Skill rédigée par {provider}", ai_err:"Erreur IA : {e}", ai_repo_q:"En 5 puces courtes : que fait ce dépôt, pour qui, et comment l'installer et l'utiliser ? Puis une ligne sur sa place dans un kit IA.", route_loading:"Récupération de {repo} depuis GitHub…", route_notfound:"Ce dépôt n'existe pas sur GitHub.", route_badpack:"Aucun pack de ce nom.", shared_stack:"Collection partagée", shared_hint:"{n} dépôts · partagée le {date} · touchez + pour en ajouter un, ou ajoutez-les tous à votre Collection.", shared_add_all:"Tout ajouter à ma Collection", shared_fail:"Ce lien de partage a expiré ou n'existe pas.", pack_share:"Copier le lien du pack", pack_link_copied:"Lien du pack copié ✓", repo_pinned:"{name} passe en premier — swipez pour décider."
+  ask_ai:"Demander à l'IA à propos de ce dépôt", ask_ai_stack:"Demander à l'IA à propos de ma Collection", ask_ai_pack:"Demander à l'IA à propos de ce pack", ask_ai_inapp:"Demander à votre IA connectée", ask_ai_inapp_sub:"répond ici même, avec vos outils MCP", chat_title:"Chat du kit · {title}", chat_ph:"Posez une question sur ces dépôts…", chat_send:"Envoyer", chat_thinking:"Réflexion…", chat_noai:"Connectez Claude, ChatGPT ou Perplexity dans l'onglet Vous pour discuter ici.", chat_goconnect:"Ouvrir les connexions", chat_tools:"outil utilisé", skill_ai:"Rédiger avec l'IA", skill_ai_sub:"un meilleur SKILL.md grâce à votre IA connectée", skill_ai_done:"Skill rédigée par {provider}", ai_err:"Erreur IA : {e}", ai_repo_q:"En 5 puces courtes : que fait ce dépôt, pour qui, et comment l'installer et l'utiliser ? Puis une ligne sur sa place dans un kit IA.", route_loading:"Récupération de {repo} depuis GitHub…", route_notfound:"Ce dépôt n'existe pas sur GitHub.", route_badpack:"Aucun pack de ce nom.", shared_stack:"Collection partagée", shared_hint:"{n} dépôts · partagée le {date} · touchez + pour en ajouter un, ou ajoutez-les tous à votre Collection.", shared_add_all:"Tout ajouter à ma Collection", shared_fail:"Ce lien de partage a expiré ou n'existe pas.", pack_share:"Copier le lien du pack", pack_link_copied:"Lien du pack copié ✓", repo_pinned:"{name} passe en premier — swipez pour décider.", tr_from:"traduit du {lang}", tr_show:"voir la traduction", tr_tap:"Touchez pour voir l'original", tr_auto:"Traduire les dépôts automatiquement", tr_auto_hint:"Les dépôts écrits dans une autre langue sont affichés en {lang}. Utilise votre IA connectée si disponible, sinon Google Traduction.", tr_on:"✓ oui", tr_off:"non"
  },
  de:{
   tagline:"verlieb dich in Code", quiz_q:"Was ist dein Job? Hol dir sofort dein Starterpaket:",
@@ -655,7 +658,7 @@ const I18N={
   pack_lower:"Paket",
   sec_ai:"KI-VERBINDUNGEN", ai_claude:"Claude", ai_openai:"ChatGPT", ai_pplx:"Perplexity", ai_key_ph:"API-Schlüssel einfügen", ai_connect:"Verbinden", ai_connected_model:"Verbunden · {model}", ai_connected:"Verbunden", ai_disconnect:"Trennen", ai_rejected:"Dieser Schlüssel wurde abgelehnt.", ai_hint:"Deine Schlüssel bleiben auf diesem Gerät, werden nur an diesen Anbieter gesendet und nie in Backups aufgenommen. So nutzt du dein eigenes Konto: Für claude.ai, ChatGPT oder Perplexity gibt es keinen Drittanbieter-Login.", ai_get_key:"Schlüssel holen", ai_default:"Standard-KI für Antworten in der App", ai_auto:"Automatisch (erste verbundene)",
   sec_mcp:"MCP-SERVER", mcp_hint:"Füge entfernte MCP-Server (https) hinzu. Claude nutzt sie als Tools im Toolkit-Chat. Server auf deinem eigenen Rechner sind von Handy oder Browser aus nicht erreichbar.", mcp_name_ph:"Name", mcp_url_ph:"https://…/mcp", mcp_token_ph:"Bearer-Token (optional)", mcp_add:"Hinzufügen & testen", mcp_ok:"Verbunden · {n} Tools", mcp_saved:"Gespeichert — von hier nicht testbar, Claude erreicht ihn trotzdem", mcp_fail:"Keine Antwort — URL prüfen", mcp_none:"Noch keine MCP-Server.",
-  ask_ai:"KI zu diesem Repo fragen", ask_ai_stack:"KI zu meiner Sammlung fragen", ask_ai_pack:"KI zu diesem Paket fragen", ask_ai_inapp:"Deine verbundene KI fragen", ask_ai_inapp_sub:"antwortet direkt hier, mit deinen MCP-Tools", chat_title:"Toolkit-Chat · {title}", chat_ph:"Frag alles über diese Repos…", chat_send:"Senden", chat_thinking:"Denkt nach…", chat_noai:"Verbinde Claude, ChatGPT oder Perplexity im Tab „Du“, um hier zu chatten.", chat_goconnect:"Verbindungen öffnen", chat_tools:"Tool verwendet", skill_ai:"Mit KI schreiben", skill_ai_sub:"eine bessere SKILL.md von deiner verbundenen KI", skill_ai_done:"Skill geschrieben von {provider}", ai_err:"KI-Fehler: {e}", ai_repo_q:"In 5 kurzen Stichpunkten: Was tut dieses Repo, für wen ist es, und wie installiere und nutze ich es? Dann ein Satz, warum es in ein KI-Toolkit gehört.", route_loading:"{repo} wird von GitHub geladen…", route_notfound:"Dieses Repo gibt es auf GitHub nicht.", route_badpack:"Kein Paket mit diesem Namen.", shared_stack:"Geteilte Sammlung", shared_hint:"{n} Repos · geteilt am {date} · tippe auf +, um eins hinzuzufügen, oder füge alle deiner Sammlung hinzu.", shared_add_all:"Alle zu meiner Sammlung hinzufügen", shared_fail:"Dieser Teilen-Link ist abgelaufen oder existiert nicht.", pack_share:"Paket-Link kopieren", pack_link_copied:"Paket-Link kopiert ✓", repo_pinned:"{name} kommt zuerst — swipe, um zu entscheiden."
+  ask_ai:"KI zu diesem Repo fragen", ask_ai_stack:"KI zu meiner Sammlung fragen", ask_ai_pack:"KI zu diesem Paket fragen", ask_ai_inapp:"Deine verbundene KI fragen", ask_ai_inapp_sub:"antwortet direkt hier, mit deinen MCP-Tools", chat_title:"Toolkit-Chat · {title}", chat_ph:"Frag alles über diese Repos…", chat_send:"Senden", chat_thinking:"Denkt nach…", chat_noai:"Verbinde Claude, ChatGPT oder Perplexity im Tab „Du“, um hier zu chatten.", chat_goconnect:"Verbindungen öffnen", chat_tools:"Tool verwendet", skill_ai:"Mit KI schreiben", skill_ai_sub:"eine bessere SKILL.md von deiner verbundenen KI", skill_ai_done:"Skill geschrieben von {provider}", ai_err:"KI-Fehler: {e}", ai_repo_q:"In 5 kurzen Stichpunkten: Was tut dieses Repo, für wen ist es, und wie installiere und nutze ich es? Dann ein Satz, warum es in ein KI-Toolkit gehört.", route_loading:"{repo} wird von GitHub geladen…", route_notfound:"Dieses Repo gibt es auf GitHub nicht.", route_badpack:"Kein Paket mit diesem Namen.", shared_stack:"Geteilte Sammlung", shared_hint:"{n} Repos · geteilt am {date} · tippe auf +, um eins hinzuzufügen, oder füge alle deiner Sammlung hinzu.", shared_add_all:"Alle zu meiner Sammlung hinzufügen", shared_fail:"Dieser Teilen-Link ist abgelaufen oder existiert nicht.", pack_share:"Paket-Link kopieren", pack_link_copied:"Paket-Link kopiert ✓", repo_pinned:"{name} kommt zuerst — swipe, um zu entscheiden.", tr_from:"übersetzt aus {lang}", tr_show:"Übersetzung zeigen", tr_tap:"Tippen für das Original", tr_auto:"Repos automatisch übersetzen", tr_auto_hint:"Repos in einer anderen Sprache werden auf {lang} angezeigt. Nutzt deine verbundene KI, sonst Google Übersetzer.", tr_on:"✓ an", tr_off:"aus"
  },
  zh:{
   tagline:"爱上代码", quiz_q:"你的职业是什么？立即获取你的入门礼包：",
@@ -711,7 +714,7 @@ const I18N={
   pack_lower:"礼包",
   sec_ai:"AI 连接", ai_claude:"Claude", ai_openai:"ChatGPT", ai_pplx:"Perplexity", ai_key_ph:"粘贴 API 密钥", ai_connect:"连接", ai_connected_model:"已连接 · {model}", ai_connected:"已连接", ai_disconnect:"断开", ai_rejected:"该密钥被拒绝。", ai_hint:"密钥仅保存在本设备、仅发送给对应服务商，且绝不会包含在备份中。这是使用你自己账户的方式：claude.ai、ChatGPT 和 Perplexity 都不提供第三方登录。", ai_get_key:"获取密钥", ai_default:"应用内回答的默认 AI", ai_auto:"自动（首个已连接）",
   sec_mcp:"MCP 服务器", mcp_hint:"添加远程 MCP 服务器（https）。Claude 会在工具箱聊天中将其作为工具使用。运行在你电脑上的服务器无法从手机或浏览器访问。", mcp_name_ph:"名称", mcp_url_ph:"https://…/mcp", mcp_token_ph:"Bearer 令牌（可选）", mcp_add:"添加并测试", mcp_ok:"已连接 · {n} 个工具", mcp_saved:"已保存 — 无法在此测试，Claude 仍可访问", mcp_fail:"无响应 — 请检查 URL", mcp_none:"还没有 MCP 服务器。",
-  ask_ai:"向 AI 询问此仓库", ask_ai_stack:"向 AI 询问我的收藏", ask_ai_pack:"向 AI 询问此礼包", ask_ai_inapp:"询问你已连接的 AI", ask_ai_inapp_sub:"就在这里回答，可使用你的 MCP 工具", chat_title:"工具箱聊天 · {title}", chat_ph:"随便问关于这些仓库的问题…", chat_send:"发送", chat_thinking:"思考中…", chat_noai:"在「我的」标签连接 Claude、ChatGPT 或 Perplexity 后即可在此聊天。", chat_goconnect:"打开连接", chat_tools:"使用了工具", skill_ai:"用 AI 撰写", skill_ai_sub:"由你已连接的 AI 生成更好的 SKILL.md", skill_ai_done:"Skill 由 {provider} 撰写", ai_err:"AI 错误：{e}", ai_repo_q:"用 5 个简短要点说明：这个仓库做什么、适合谁、如何安装和使用？然后用一句话说明它为什么值得放进 AI 工具箱。", route_loading:"正在从 GitHub 获取 {repo}…", route_notfound:"GitHub 上不存在该仓库。", route_badpack:"没有这个名称的礼包。", shared_stack:"共享收藏", shared_hint:"{n} 个仓库 · 分享于 {date} · 点击 + 添加一个，或全部加入你的收藏。", shared_add_all:"全部加入我的收藏", shared_fail:"该分享链接已失效或不存在。", pack_share:"复制礼包链接", pack_link_copied:"礼包链接已复制 ✓", repo_pinned:"{name} 排在最前 — 滑动来决定。"
+  ask_ai:"向 AI 询问此仓库", ask_ai_stack:"向 AI 询问我的收藏", ask_ai_pack:"向 AI 询问此礼包", ask_ai_inapp:"询问你已连接的 AI", ask_ai_inapp_sub:"就在这里回答，可使用你的 MCP 工具", chat_title:"工具箱聊天 · {title}", chat_ph:"随便问关于这些仓库的问题…", chat_send:"发送", chat_thinking:"思考中…", chat_noai:"在「我的」标签连接 Claude、ChatGPT 或 Perplexity 后即可在此聊天。", chat_goconnect:"打开连接", chat_tools:"使用了工具", skill_ai:"用 AI 撰写", skill_ai_sub:"由你已连接的 AI 生成更好的 SKILL.md", skill_ai_done:"Skill 由 {provider} 撰写", ai_err:"AI 错误：{e}", ai_repo_q:"用 5 个简短要点说明：这个仓库做什么、适合谁、如何安装和使用？然后用一句话说明它为什么值得放进 AI 工具箱。", route_loading:"正在从 GitHub 获取 {repo}…", route_notfound:"GitHub 上不存在该仓库。", route_badpack:"没有这个名称的礼包。", shared_stack:"共享收藏", shared_hint:"{n} 个仓库 · 分享于 {date} · 点击 + 添加一个，或全部加入你的收藏。", shared_add_all:"全部加入我的收藏", shared_fail:"该分享链接已失效或不存在。", pack_share:"复制礼包链接", pack_link_copied:"礼包链接已复制 ✓", repo_pinned:"{name} 排在最前 — 滑动来决定。", tr_from:"译自{lang}", tr_show:"显示翻译", tr_tap:"点击查看原文", tr_auto:"自动翻译仓库", tr_auto_hint:"其他语言的仓库会以{lang}显示。优先使用你已连接的 AI，否则使用 Google 翻译。", tr_on:"✓ 开", tr_off:"关"
  }
 };
 const GROUP_L10N={
@@ -772,7 +775,7 @@ const MAX_PAGES=10;
 const SEED = __SEED__;
 
 // ---------- persistent state ----------
-function defaults(){return {stack:[], swipes:{}, reviewed:0, rightSwipes:0, langCounts:{}, channelsOn:{mcp:true,claude:true,agents:true,awesome:true,trend:false,hot:true}, customChannels:[], ghToken:null, deviceToken:null, splashSeen:false, seeded2:false, packGot:{}, achUnlocked:{}, lang:"", ai:{claudeKey:null,claudeModel:"",openaiKey:null,openaiModel:"",pplxKey:null,provider:"auto"}, mcpServers:[]};}
+function defaults(){return {stack:[], swipes:{}, reviewed:0, rightSwipes:0, langCounts:{}, channelsOn:{mcp:true,claude:true,agents:true,awesome:true,trend:false,hot:true}, customChannels:[], ghToken:null, deviceToken:null, splashSeen:false, seeded2:false, packGot:{}, achUnlocked:{}, lang:"", ai:{claudeKey:null,claudeModel:"",openaiKey:null,openaiModel:"",pplxKey:null,provider:"auto"}, mcpServers:[], autoTranslate:true};}
 let S = defaults();
 try{ const raw=localStorage.getItem(LS_KEY); if(raw) S={...defaults(),...JSON.parse(raw)};
   else{ const v1=localStorage.getItem("reposwipe.v1"); if(v1){const o=JSON.parse(v1); S={...defaults(),...o}; } }
@@ -785,6 +788,7 @@ if(!S.achUnlocked||typeof S.achUnlocked!=="object")S.achUnlocked={};
 if(!S.lang){const nl=(navigator.language||"en").slice(0,2).toLowerCase();S.lang=["es","fr","de","zh"].includes(nl)?nl:"en";}
 if(!S.ai||typeof S.ai!=="object")S.ai={claudeKey:null,claudeModel:"",openaiKey:null,openaiModel:"",pplxKey:null,provider:"auto"};
 if(!Array.isArray(S.mcpServers))S.mcpServers=[];
+if(S.autoTranslate===undefined)S.autoTranslate=true;
 function save(){ try{ localStorage.setItem(LS_KEY, JSON.stringify(S)); }catch(e){} try{checkAch();}catch(e){} }
 if(!S.seeded2){
   const have=new Set(S.stack.map(s=>s.repo.full_name.toLowerCase()));
@@ -986,6 +990,70 @@ function openAiChat(title,repos,firstQuestion){
   if(firstQuestion)send(firstQuestion); else inp.focus();
 }
 
+// ---------- Auto-translate: repo text written in another language is shown in yours ----------
+// Engine: your connected AI (Connections) when present, otherwise Google Translate's free endpoint.
+// Only repo text (descriptions, README excerpts) is sent — never your Stack, keys or settings. Toggle in the You tab.
+const LANG_NAMES={en:"English",es:"Español",fr:"Français",de:"Deutsch",zh:"中文",ja:"日本語",ko:"한국어",ru:"Русский",pt:"Português",it:"Italiano",ar:"العربية",he:"עברית",th:"ไทย",hi:"हिन्दी",tr:"Türkçe",nl:"Nederlands",pl:"Polski",uk:"Українська",vi:"Tiếng Việt",id:"Bahasa Indonesia",fa:"فارسی",sv:"Svenska",cs:"Čeština"};
+const TR_SCRIPTS=[[/[\u3040-\u30ff]/g,"ja",.08],[/[\uac00-\ud7af]/g,"ko",.3],[/[\u4e00-\u9fff\u3400-\u4dbf]/g,"zh",.3],[/[\u0400-\u04ff]/g,"ru",.3],[/[\u0600-\u06ff]/g,"ar",.3],[/[\u0590-\u05ff]/g,"he",.3],[/[\u0e00-\u0e7f]/g,"th",.3],[/[\u0900-\u097f]/g,"hi",.3]];
+const TR_STOP={en:"the and for with this that from your you are is it to of in on by an as be or can use".split(" "),es:"el la los las de que y para con una un es por del se como más su este esta sus".split(" "),fr:"le la les des est une un pour avec et dans sur ce cette vous qui que du au pas".split(" "),de:"der die das und ist nicht mit für ein eine von zu auf den dem sie werden auch".split(" "),pt:"o os as um uma para com não que do da em por mais seu sua você".split(" "),it:"il lo la gli le di che per con una un non è sono del della questo".split(" ")};
+function detectLang(txt){
+  const s=String(txt||"").replace(/https?:\/\/\S+/g," ").replace(/`[^`]*`/g," ");
+  const letters=(s.match(/\p{L}/gu)||[]).length; if(!letters)return null;
+  for(const [re,code,th] of TR_SCRIPTS){const n=(s.match(re)||[]).length;if(n/letters>=th)return code;}
+  const words=s.toLowerCase().match(/\p{L}+/gu)||[]; if(words.length<4)return null;
+  let best=null,bestScore=0;
+  for(const code in TR_STOP){const set=TR_STOP[code];let hits=0;const d=new Set();for(const w of words){if(set.indexOf(w)>=0){hits++;d.add(w);}}const sc=hits/words.length;if(d.size>=2&&sc>bestScore){bestScore=sc;best=code;}}
+  return bestScore>=0.12?best:null; // unsure → leave it alone
+}
+function needsTranslation(txt){ if(!S.autoTranslate)return false; const d=detectLang(txt); return !!d&&d!==S.lang; }
+const trCache=new Map();
+async function googleTranslate(txt,tl){
+  const res=await fetch("https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&dt=t&tl="+encodeURIComponent(tl==="zh"?"zh-CN":tl),{method:"POST",headers:{"content-type":"application/x-www-form-urlencoded"},body:"q="+encodeURIComponent(txt)});
+  if(!res.ok)throw 0; const j=await res.json();
+  return {text:(j[0]||[]).map(x=>(x&&x[0])||"").join(""),from:String(j[2]||"auto").toLowerCase().split("-")[0],via:"google"};
+}
+// Translate many strings at once; results align with the input. Untranslatable items come back unchanged.
+async function translateTexts(texts){
+  const tl=S.lang||"en", out=new Array(texts.length), todo=[];
+  texts.forEach((x,i)=>{const k=tl+"|"+x;if(trCache.has(k))out[i]=trCache.get(k);else todo.push(i);});
+  if(!todo.length)return out;
+  const keep=(i,r)=>{trCache.set(tl+"|"+texts[i],r);out[i]=r;};
+  const p=aiProvider();
+  if(p){
+    try{
+      const a=await askAI("Translate each item into "+(LANG_NAMES[tl]||tl)+". Keep product names, commands and code unchanged. Reply with ONLY a JSON array, same order, of objects {\"t\":\"translation\",\"from\":\"ISO 639-1 code of the source language\"}.\n"+JSON.stringify(todo.map(i=>texts[i])),{mcp:false,system:"You are a precise translator. Output only JSON.",maxTokens:Math.min(4000,400+todo.reduce((n,i)=>n+texts[i].length,0)*2)});
+      const m=String(a.text||"").match(/\[[\s\S]*\]/); const arr=JSON.parse(m?m[0]:a.text);
+      if(Array.isArray(arr)&&arr.length===todo.length){todo.forEach((i,j)=>keep(i,{text:String((arr[j]&&arr[j].t)||texts[i]),from:String((arr[j]&&arr[j].from)||"auto").toLowerCase(),via:p}));return out;}
+    }catch(e){}
+  }
+  // Google: one request for the batch when nothing contains a newline (segments come back in order), else one per item
+  const multi=todo.length>1&&todo.every(i=>texts[i].indexOf("\n")<0);
+  if(multi){
+    try{const r=await googleTranslate(todo.map(i=>texts[i]).join("\n"),tl);const parts=r.text.split("\n");
+      if(parts.length===todo.length){todo.forEach((i,j)=>keep(i,{text:parts[j].trim(),from:r.from,via:"google"}));return out;}
+    }catch(e){}
+  }
+  await Promise.all(todo.map(async i=>{try{keep(i,await googleTranslate(texts[i],tl));}catch(e){out[i]={text:texts[i],from:null,via:null};}}));
+  return out;
+}
+function trPill(from){const name=LANG_NAMES[from]||String(from||"").toUpperCase()||"?";return '<span class="trpill nodrag" title="'+esc(t("tr_tap"))+'">'+icon("globe")+' '+esc(t("tr_from",{lang:name}))+'</span>';}
+// Translate elements' text in place; the pill toggles original ↔ translation
+async function translateEls(items){
+  const list=items.filter(x=>x.el&&x.text&&needsTranslation(x.text)); if(!list.length)return;
+  const res=await translateTexts(list.map(x=>x.text));
+  list.forEach((x,i)=>{const r=res[i];if(!r||!r.text||r.text===x.text||!document.contains(x.el))return;
+    x.el.dataset.orig=x.text;x.el.dataset.tr=r.text;x.el.dataset.from=r.from||"";x.el.dataset.showing="tr";
+    x.el.innerHTML=esc(r.text)+" "+trPill(r.from);});
+}
+document.addEventListener("click",e=>{
+  const pill=e.target.closest&&e.target.closest(".trpill"); if(!pill)return;
+  e.preventDefault();e.stopPropagation();
+  const el=pill.parentElement; if(!el||!el.dataset.tr)return;
+  const showTr=el.dataset.showing!=="tr"; el.dataset.showing=showTr?"tr":"orig";
+  el.innerHTML=esc(showTr?el.dataset.tr:el.dataset.orig)+" "+(showTr?trPill(el.dataset.from):'<span class="trpill nodrag">'+icon("globe")+' '+esc(t("tr_show"))+'</span>');
+},true);
+function translateDescs(root){translateEls([...root.querySelectorAll(".sd")].map(el=>({el,text:el.textContent.trim()})));}
+
 // ---------- Make a Skill: turn any repo into a ready-to-save SKILL.md ----------
 function fullNameFromUrl(u){const m=/github\.com\/([^\/\s#?]+)\/([^\/\s#?]+)/.exec(u||"");return m?m[1]+"/"+m[2].replace(/\.git$/,""):null;}
 function extractInstall(md){
@@ -1166,6 +1234,7 @@ async function fillBullets(r){
   const host=stage.querySelector(`.bul[data-id="${r.id}"]`);
   if(!host||!b.length) return;
   host.innerHTML=b.map(t=>`<li>${esc(t)}</li>`).join("");
+  void translateEls([...host.querySelectorAll("li")].map(el=>({el,text:el.textContent})));
 }
 
 // ---------- feed (live: every card comes straight from GitHub's API) ----------
@@ -1365,7 +1434,7 @@ async function loadBack(r,el){
     if(snips.length&&sd){sd.innerHTML="<h3>"+icon("plug")+" "+t("add_to_setup")+"</h3>"+snips.slice(0,2).map(([lab,code])=>
       `<div class="codebox"><div class="cl"><span>${esc(lab)}</span><span class="copy" data-c="${esc(code)}">Copy</span></div><code>${esc(code)}</code></div>`).join("");
       sd.querySelectorAll(".copy").forEach(b=>b.addEventListener("click",ev=>{ev.stopPropagation();navigator.clipboard.writeText(b.dataset.c);b.textContent="✓ Copied";}));}
-    const rd=el.querySelector("#readme"); if(rd)rd.textContent=text||"(empty)";
+    const rd=el.querySelector("#readme"); if(rd){rd.textContent=text||"(empty)"; if(text)void translateEls([{el:rd,text}]);}
   }catch(e){const rd=el.querySelector("#readme");if(rd)rd.textContent=t("readme_fail");}
 }
 
@@ -1804,6 +1873,7 @@ async function renderPackDetail(p){
     if(e.target.closest(".rowbtns"))return;
     window.open(row.dataset.url,"_blank","noopener");
   }));
+  translateDescs(el);
   el.querySelectorAll(".packadd").forEach(b=>b.addEventListener("click",e=>{
     e.stopPropagation();
     const r=repos[+b.dataset.i];
@@ -1961,6 +2031,7 @@ function renderStack(){
     if(e.target.closest(".rowbtns"))return;
     window.open(row.dataset.url,"_blank","noopener");
   }));
+  translateDescs(el);
   el.querySelectorAll(".del").forEach(b=>b.addEventListener("click",e=>{e.stopPropagation();S.stack=S.stack.filter(s=>s.repo.id!==+b.dataset.id);save();renderStack();updateMeta();}));
   el.querySelectorAll(".rowfork").forEach(b=>b.addEventListener("click",e=>{e.stopPropagation();window.open(b.dataset.url,"_blank","noopener");}));
   el.querySelectorAll(".rowclaude").forEach(b=>b.addEventListener("click",e=>{e.stopPropagation();window.open(claudeUrl(b.dataset.url),"_blank","noopener");}));
@@ -1996,7 +2067,8 @@ function renderProfile(){
     <div class="perr" id="tokErr"></div>
     <div class="phint">${t("token_hint_pre")}<a href="https://github.com/settings/tokens/new?description=RepoSwipe" target="_blank" rel="noopener">github.com/settings/tokens</a>${t("token_hint_post")}</div>`;
   el.innerHTML=`<div class="vtitle">${t("you")}</div>
-    <div class="seclabel">${t("sec_language")}</div><div class="glasscard"><div class="langrow">${icon("globe")}<select id="langSel" class="langsel"><option value="en">English</option><option value="es">Español</option><option value="fr">Français</option><option value="de">Deutsch</option><option value="zh">中文</option></select></div></div>
+    <div class="seclabel">${t("sec_language")}</div><div class="glasscard"><div class="langrow">${icon("globe")}<select id="langSel" class="langsel"><option value="en">English</option><option value="es">Español</option><option value="fr">Français</option><option value="de">Deutsch</option><option value="zh">中文</option></select></div>
+      <div class="prow" style="cursor:pointer;border-top:1px solid rgba(122,111,168,.12)" id="trToggle"><div class="pname" style="flex:1">${icon("sparkle")} ${t("tr_auto")}<div class="psub">${esc(t("tr_auto_hint",{lang:LANG_NAMES[S.lang]||S.lang}))}</div></div><div style="color:${S.autoTranslate?'var(--accent2)':'var(--muted)'};font-weight:800;flex-shrink:0">${S.autoTranslate?t("tr_on"):t("tr_off")}</div></div></div>
     <div class="seclabel">${t("sec_ai_score")}</div><div class="glasscard">
       <div class="scorewrap">
         <div class="scorering" id="aiScoreRing" style="background:conic-gradient(#C084FC 0deg, rgba(122,111,168,.25) 0)"><span class="scorenum" id="aiScoreNum">0</span></div>
@@ -2097,6 +2169,7 @@ function renderProfile(){
   });
   el.querySelectorAll(".mcpdel").forEach(b=>b.addEventListener("click",()=>{removeMcpServer(b.dataset.url);renderProfile();}));
   const lsel=el.querySelector("#langSel"); if(lsel){lsel.value=S.lang; lsel.addEventListener("change",()=>setLang(lsel.value));}
+  const trt=el.querySelector("#trToggle"); if(trt)trt.addEventListener("click",()=>{S.autoTranslate=!S.autoTranslate;save();renderProfile();});
 }
 
 // ---------- chrome ----------
@@ -2265,6 +2338,7 @@ async function openSharedStack(slug){
   el.querySelector("#shBack").addEventListener("click",back);
   el.querySelector("#shMine").addEventListener("click",back);
   el.querySelectorAll(".srow[data-url]").forEach(row=>row.addEventListener("click",e=>{if(e.target.closest(".rowbtns"))return;window.open(row.dataset.url,"_blank","noopener");}));
+  translateDescs(el);
   el.querySelectorAll(".shadd").forEach(b=>b.addEventListener("click",e=>{e.stopPropagation();const r=items[+b.dataset.i];if(addPackRepo(r,null)){b.textContent="✓";toast(t("toast_added_stack",{name:r.name}));}else toast(t("toast_already_stack"));}));
   el.querySelector("#shAddAll").addEventListener("click",()=>{let n=0;for(const r of items)if(addPackRepo(r,null))n++;toast(n?t("toast_added_n",{n}):t("toast_all_already"));el.querySelectorAll(".shadd").forEach(b=>b.textContent="✓");});
 }

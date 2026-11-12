@@ -97,7 +97,8 @@ function check(name, ok, detail = "") {
     const saved = { ...S.channelsOn };
     for (const k of Object.keys(S.channelsOn)) S.channelsOn[k] = false;
     await loadFeed();
-    const msg = document.querySelector("#stage .empty")?.textContent || "";
+    let msg = document.querySelector("#stage .empty")?.textContent || "";
+    for (let i = 0; i < 10 && !/No channels on/.test(msg); i++) { await new Promise(r => setTimeout(r, 200)); renderDeck(); msg = document.querySelector("#stage .empty")?.textContent || ""; } // an older in-flight fetch can re-render once; settle
     S.channelsOn = saved; save();
     void loadFeed();
     return /No channels on/.test(msg);
@@ -599,6 +600,62 @@ function check(name, ok, detail = "") {
     check("deeplinks: pack link button copies /pack/engineer/", await page.evaluate(async () => (await navigator.clipboard.readText()) === "https://swipe.yeete.ai/pack/engineer/")); }
   else check("deeplinks: pack link button copies /pack/engineer/", true, "skipped — pack list empty (API limit)");
   await page.evaluate(() => { window.fetch = window.__realFetch2; S.stack = S.stack.filter(s => !/^shared\//.test(s.repo.full_name)); save(); history.replaceState(null, "", location.pathname); });
+
+  // 5h. Auto-translate (v9.1): detection units, Google path (stubbed), AI path (stubbed), card/README/Stack UI, toggle
+  check("translate: detectLang spots zh / es / en and leaves short or code-only text alone", await page.evaluate(() =>
+    detectLang("一个用于管理 GitHub 仓库的命令行工具，支持批量克隆") === "zh" &&
+    detectLang("Una herramienta para gestionar los repositorios de GitHub con soporte para clonar en lote") === "es" &&
+    detectLang("A fast CLI tool for managing your GitHub repositories with batch cloning") === "en" &&
+    detectLang("npx create-foo") === null && detectLang("https://example.com/x") === null && detectLang("") === null));
+  check("translate: needsTranslation respects UI language and the toggle", await page.evaluate(() => {
+    const zh = "一个用于管理 GitHub 仓库的命令行工具，支持批量克隆";
+    const a = needsTranslation(zh) === true && needsTranslation("A fast CLI tool for managing your GitHub repositories with batch cloning") === false;
+    S.autoTranslate = false; const b = needsTranslation(zh) === false; S.autoTranslate = true; return a && b; }));
+  await page.evaluate(() => { window.__realFetch3 = window.fetch; window.__trCalls = [];
+    window.fetch = async (url, init) => {
+      const u = String(url);
+      if (/translate\.googleapis\.com/.test(u)) {
+        const q = decodeURIComponent(((init && init.body) || "").replace(/^q=/, "").replace(/\+/g, " "));
+        window.__trCalls.push(q);
+        const segs = q.split("\n").map((line, i, arr) => ["Translated: " + line.replace(/[^\x00-\x7f]+/g, "zh").slice(0, 40) + (i < arr.length - 1 ? "\n" : ""), line]);
+        return new Response(JSON.stringify([segs, null, "zh-CN"]), { status: 200, headers: { "content-type": "application/json" } });
+      }
+      if (/api\.github\.com\/repos\/tr\/demo\/readme$/.test(u)) return new Response(JSON.stringify({ content: btoa(unescape(encodeURIComponent("这是一个中文的自述文件，用来测试翻译。\n第二行也是中文内容，用于验证。\n"))) }), { status: 200, headers: { "content-type": "application/json" } });
+      return window.__realFetch3(url, init);
+    }; });
+  // Stack row with a Chinese description → translated in place with a pill; pill toggles the original back
+  await page.evaluate(() => { S.stack.unshift({ repo: { id: 888001, full_name: "tr/demo", name: "demo", html_url: "https://github.com/tr/demo", description: "一个用于管理 GitHub 仓库的命令行工具，支持批量克隆", language: "Go", topics: [], stargazers_count: 10, owner: { login: "tr", avatar_url: "" } }, superLike: false, at: Date.now() }); save(); });
+  await page.click('.tab[data-tab="stack"]'); await page.waitForTimeout(700);
+  const trRow = page.locator('#stackview .srow[data-url="https://github.com/tr/demo"] .sd');
+  check("translate: Stack row shows the translation + 'translated from 中文' pill", (await trRow.locator(".trpill").count()) === 1 && /^Translated:/.test(await trRow.innerText()) && /中文/.test(await trRow.locator(".trpill").innerText()));
+  await trRow.locator(".trpill").click(); await page.waitForTimeout(150);
+  check("translate: tapping the pill shows the original (and doesn't open the row)", /仓库/.test(await trRow.innerText()) && await page.evaluate(() => view === "stack"));
+  await trRow.locator(".trpill").click(); await page.waitForTimeout(150);
+  check("translate: tapping again restores the translation", /^Translated:/.test(await trRow.innerText()));
+  check("translate: only foreign rows were sent (one batched Google request for the Stack)", await page.evaluate(() => __trCalls.length === 1 && __trCalls[0].indexOf("仓库") >= 0 && __trCalls[0].indexOf("\n") < 0));
+  // Card: bullets + README translated on the deck
+  await page.evaluate(() => { bulletCache.clear(); feed = [{ id: 888002, full_name: "tr/demo", name: "demo", html_url: "https://github.com/tr/demo", description: "一个用于管理 GitHub 仓库的命令行工具，支持批量克隆", language: "Go", topics: ["cli"], stargazers_count: 10, forks_count: 1, open_issues_count: 0, pushed_at: new Date().toISOString(), created_at: "2025-01-01T00:00:00Z", owner: { login: "tr", avatar_url: "" }, license: null }]; packActive = null; });
+  await page.click('.tab[data-tab="swipe"]'); await page.evaluate(() => renderDeck()); await page.waitForTimeout(900);
+  check("translate: card bullets get translated with a pill", (await page.locator(".card.top .bul li .trpill").count()) >= 1 && /^Translated:/.test(await page.locator(".card.top .bul li").first().innerText()));
+  await page.evaluate(() => flip()); await page.waitForTimeout(900);
+  check("translate: README on the card back is translated with a pill", (await page.locator(".card.top #readme .trpill").count()) === 1 && /Translated:/.test(await page.locator(".card.top #readme").innerText()));
+  check("translate: README stays a single request (newlines → per-item path)", await page.evaluate(() => __trCalls.some(q => q.indexOf("\n") >= 0)));
+  // AI path: with a connected key, translation goes through askAI (JSON array) and reports the provider
+  await page.evaluate(() => { S.ai.claudeKey = "sk-ant-test-key-0000"; S.ai.claudeModel = "claude-sonnet-4-5"; trCache.clear();
+    const prev = window.fetch; window.__aiTr = 0;
+    window.fetch = async (url, init) => { if (/api\.anthropic\.com\/v1\/messages/.test(String(url))) { window.__aiTr++; const body = JSON.parse(init.body); const items = JSON.parse(body.messages[0].content.slice(body.messages[0].content.indexOf("["))); return new Response(JSON.stringify({ content: [{ type: "text", text: JSON.stringify(items.map(x => ({ t: "AI: " + x.slice(0, 10), from: "zh" }))) }] }), { status: 200, headers: { "content-type": "application/json" } }); } return prev(url, init); }; });
+  const aiTr = await page.evaluate(async () => { const r = await translateTexts(["一个用于管理 GitHub 仓库的命令行工具", "支持批量克隆"]); return r.length === 2 && r[0].via === "claude" && r[0].from === "zh" && /^AI: /.test(r[0].text) && /^AI: /.test(r[1].text) && __aiTr === 1; });
+  check("translate: connected AI is preferred (one JSON batch call, provider reported)", aiTr);
+  await page.evaluate(() => { disconnectAi("claude"); trCache.clear(); });
+  // Toggle off in the You tab → nothing translated, nothing sent
+  await page.click('.tab[data-tab="profile"]'); await page.waitForTimeout(400);
+  check("translate: You tab shows the auto-translate toggle (on)", (await page.locator("#trToggle").count()) === 1 && /on|sí|oui|an|开/.test(await page.locator("#trToggle").innerText()));
+  await page.locator("#trToggle").click(); await page.waitForTimeout(300);
+  check("translate: toggle switches off and persists", await page.evaluate(() => S.autoTranslate === false && JSON.parse(localStorage.getItem("reposwipe.v2")).autoTranslate === false));
+  await page.evaluate(() => { window.__trCalls.length = 0; }); await page.click('.tab[data-tab="stack"]'); await page.waitForTimeout(500);
+  check("translate: with the toggle off, Stack rows stay in the original language and nothing is sent", (await trRow.locator(".trpill").count()) === 0 && /仓库/.test(await trRow.innerText()) && await page.evaluate(() => __trCalls.length === 0));
+  await page.evaluate(() => { S.autoTranslate = true; S.stack = S.stack.filter(s => s.repo.full_name !== "tr/demo"); save(); window.fetch = window.__realFetch3; feed = []; });
+  check("translate: helper list of language names covers the 5 UI languages", await page.evaluate(() => ["en","es","fr","de","zh"].every(k => LANG_NAMES[k])));
 
   // 6. persistence
   await page.reload(); await page.waitForTimeout(1200);
