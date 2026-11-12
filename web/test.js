@@ -122,12 +122,16 @@ function check(name, ok, detail = "") {
   await page.waitForTimeout(400);
   check("✕ removes custom channel", (await page.locator("#channelChips .chchip", { hasText: "voice-agents" }).count()) === 0);
 
-  // 2. seeded stack
+  // 2. fresh start: a new person's Stack is empty; Yee's picks are one tap away (v11)
   await page.click('.tab[data-tab="stack"]');
   await page.waitForTimeout(600);
+  check("fresh start: new users begin with an empty Stack (no auto-seeding)", (await page.locator("#stackview .srow").count()) === 0 && (await page.locator("#seedBtn").count()) === 1 && await page.evaluate(() => S.seeded2 === true));
+  check("header shows the account button (signed out)", (await page.locator("#acctBtn").count()) === 1 && await page.evaluate(() => auth === null));
+  await page.click("#seedBtn"); await page.waitForTimeout(600);
   const rows = await page.locator("#stackview .srow").count();
   const SEEDN = await page.evaluate(() => SEED.length);
-  check(`${SEEDN} seeded favorites in Stack`, rows === SEEDN, `rows=${rows}`);
+  check(`"Add Yee's starter picks" adds all ${SEEDN} favorites`, rows === SEEDN, `rows=${rows}`);
+  check("adding the picks twice is a no-op", await page.evaluate(() => addSeedPicks() === 0 && S.stack.length === SEED.length));
 
   // 2b. row links: open / fork / claude
   const popup1 = ctx.waitForEvent("page", { timeout: 5000 }).catch(() => null);
@@ -778,6 +782,41 @@ function check(name, ok, detail = "") {
   await page.reload(); await page.waitForTimeout(1200);
   check("groups persist across reload (and survive in backups)", await page.evaluate(() => S.groups.length >= 2 && S.stack.some(s => s.group) && JSON.parse(buildBackup()).state.groups.length === S.groups.length));
   await page.evaluate(() => { S.groups = []; S.stack.forEach(s => delete s.group); save(); });
+
+  // 5l. Account + sync (v11): Supabase Auth stubbed — sign-in URL, OAuth return, profile, merge, push, refresh, sign out
+  check("account: You tab offers GitHub and Google sign-in when signed out", await (async () => { await page.click('.tab[data-tab="profile"]'); await page.waitForTimeout(300); return (await page.locator('#acctCard .acctbtn[data-provider="github"]').count()) === 1 && (await page.locator('#acctCard .acctbtn[data-provider="google"]').count()) === 1; })());
+  check("account: sign-in URL goes to Supabase authorize with the site redirect and GitHub scopes", await page.evaluate(() => { const g = authUrl("github"), o = authUrl("google"); return g.startsWith("https://jhewofwubydtyqjejlkb.supabase.co/auth/v1/authorize?provider=github&redirect_to=https%3A%2F%2Fswipe.yeete.ai%2F") && /scopes=read%3Auser%20user%3Aemail/.test(g) && /provider=google/.test(o) && !/scopes/.test(o); }));
+  await page.evaluate(() => { window.__realFetch6 = window.fetch; window.__sb = { pushes: [], row: { state: { stack: [{ repo: { id: 424242, full_name: "other/device-repo", name: "device-repo", html_url: "https://github.com/other/device-repo", description: "from my phone", language: "Go", topics: [], stargazers_count: 7, owner: { login: "other", avatar_url: "" } }, superLike: false, at: Date.now() - 5000 }], groups: [{ id: "g_phone", name: "Phone group" }], reviewed: 999, achUnlocked: { scout: 1 } }, updated_at: new Date().toISOString() }, refreshed: 0, loggedOut: 0 };
+    window.fetch = async (u, init) => { const url = String(u), m = (init && init.method) || "GET";
+      if (url.startsWith("https://jhewofwubydtyqjejlkb.supabase.co/auth/v1/user")) { if (!/Bearer tok-1|Bearer tok-2/.test((init && init.headers && init.headers.Authorization) || "")) return new Response("{}", { status: 401 }); return new Response(JSON.stringify({ id: "11111111-2222-3333-4444-555555555555", email: "yee@example.com", app_metadata: { provider: "github" }, user_metadata: { user_name: "yeetest", full_name: "Yee Test", avatar_url: "https://github.com/octocat.png" } }), { status: 200, headers: { "content-type": "application/json" } }); }
+      if (/\/auth\/v1\/token\?grant_type=refresh_token/.test(url)) { window.__sb.refreshed++; return new Response(JSON.stringify({ access_token: "tok-2", refresh_token: "ref-2", expires_in: 3600 }), { status: 200, headers: { "content-type": "application/json" } }); }
+      if (/\/auth\/v1\/logout/.test(url)) { window.__sb.loggedOut++; return new Response("", { status: 204 }); }
+      if (/\/rest\/v1\/reposwipe_user_state/.test(url) && m === "GET") return new Response(JSON.stringify(window.__sb.row ? [window.__sb.row] : []), { status: 200, headers: { "content-type": "application/json" } });
+      if (/\/rest\/v1\/reposwipe_user_state/.test(url) && m === "POST") { const b = JSON.parse(init.body); window.__sb.pushes.push({ headers: init.headers, body: b }); window.__sb.row = { state: b.state, updated_at: b.updated_at }; return new Response("", { status: 201 }); }
+      return window.__realFetch6(u, init); };
+    // simulate the OAuth return: Supabase puts the session in the URL fragment
+    history.replaceState(null, "", location.pathname + "#access_token=tok-1&expires_in=3600&refresh_token=ref-1&token_type=bearer&provider_token=gho_fromlogin");
+  });
+  const stackBefore = await page.evaluate(() => S.stack.length);
+  const ret = await page.evaluate(async () => { S.ghToken = null; const ok = await authFromHash(); return { ok, hash: location.hash, user: auth && auth.user, gh: S.ghToken, fromLogin: S.ghTokenFromLogin }; });
+  check("account: OAuth return is parsed, profile fetched, URL cleaned", ret.ok === true && ret.hash === "" && ret.user && ret.user.name === "Yee Test" && ret.user.provider === "github" && ret.user.avatar.indexOf("octocat") > 0);
+  check("account: GitHub login hands the app a GitHub token for the 5,000/hr feed", ret.gh === "gho_fromlogin" && ret.fromLogin === true);
+  check("account: the server copy is merged in — union of Stack, groups, counters, achievements", await page.evaluate((n) => S.stack.length === n + 1 && S.stack.some(s => s.repo.full_name === "other/device-repo") && S.groups.some(g => g.name === "Phone group") && S.reviewed >= 999 && !!S.achUnlocked.scout, stackBefore));
+  check("account: merged state is pushed back (upsert with user id, no keys/tokens inside)", await page.evaluate(() => { const p = __sb.pushes[__sb.pushes.length - 1]; const st = p && p.body.state; return !!p && p.body.user_id === "11111111-2222-3333-4444-555555555555" && /merge-duplicates/.test(p.headers.Prefer) && /^Bearer tok-/.test(p.headers.Authorization) && p.headers.apikey.startsWith("sb_publishable_") && !("ghToken" in st) && !("ai" in st) && !("mcpServers" in st) && !("deviceToken" in st) && st.stack.length === S.stack.length; }));
+  check("account: header button shows the avatar; You tab shows the signed-in card", await (async () => { await page.evaluate(() => renderProfile()); await page.waitForTimeout(200); return (await page.locator("#acctBtn img").count()) === 1 && /Yee Test/.test(await page.locator("#acctCard").innerText()) && (await page.locator("#acctOut").count()) === 1; })());
+  await page.evaluate(() => { __sb.pushes.length = 0; S.stack.unshift({ repo: { id: 434343, full_name: "me/new-after-login", name: "new-after-login", html_url: "https://github.com/me/new-after-login", description: "", language: null, topics: [], stargazers_count: 1, owner: { login: "me", avatar_url: "" } }, superLike: false, at: Date.now() }); save(); });
+  await page.waitForTimeout(3200);
+  check("account: a change after sign-in syncs automatically (debounced push)", await page.evaluate(() => __sb.pushes.length === 1 && __sb.pushes[0].body.state.stack.some(s => s.repo.full_name === "me/new-after-login")));
+  check("account: expired sessions refresh silently before syncing", await page.evaluate(async () => { auth.expires_at = Math.floor(Date.now() / 1000) - 10; const ok = await syncPush(); return ok && __sb.refreshed === 1 && auth.access_token === "tok-2"; }));
+  check("account: session persists across reload", await (async () => { await page.reload(); await page.waitForTimeout(1500); return await page.evaluate(() => auth && auth.user && auth.user.name === "Yee Test") && (await page.locator("#acctBtn img").count()) === 1; })());
+  await page.click("#acctBtn"); await page.waitForTimeout(500);
+  check("account: header avatar jumps to the account card", await page.evaluate(() => view === "profile") && (await page.locator("#acctOut").count()) === 1);
+  // restore the stub (reload dropped it), then sign out
+  await page.evaluate(() => { window.fetch = async (u, init) => { const url = String(u); if (/\/auth\/v1\/logout/.test(url)) return new Response("", { status: 204 }); if (/supabase\.co/.test(url)) return new Response("[]", { status: 200, headers: { "content-type": "application/json" } }); return fetch.__orig ? fetch.__orig(u, init) : Promise.reject(new Error("offline")); }; });
+  await page.click("#acctOut"); await page.waitForTimeout(400);
+  check("account: sign out clears the session + login token but keeps the Stack on the device", await page.evaluate(() => auth === null && localStorage.getItem("reposwipe.auth") === null && S.ghToken === null && S.stack.length > 10) && (await page.locator('#acctCard .acctbtn[data-provider="github"]').count()) === 1);
+  await page.evaluate(() => { S.stack = S.stack.filter(s => !/^(other|me)\//.test(s.repo.full_name)); S.groups = S.groups.filter(g => g.name !== "Phone group"); delete S.syncAt; save(); });
+  await page.reload(); await page.waitForTimeout(1200);
 
   // 6. persistence
   await page.reload(); await page.waitForTimeout(1200);
