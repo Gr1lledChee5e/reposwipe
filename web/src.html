@@ -268,6 +268,8 @@
   .trpill{display:inline-flex;align-items:center;gap:4px;font-size:9.5px;font-weight:800;color:#E9D5FF;background:rgba(139,92,246,.22);border:1px solid rgba(192,132,252,.4);border-radius:999px;padding:1px 7px;margin-left:4px;cursor:pointer;vertical-align:1px;white-space:nowrap;line-height:1.4}
   .trpill .svgi{width:10px;height:10px}
   .readme .trpill{display:inline-flex;margin:0 0 6px}
+  .trnote{margin-top:7px;flex-shrink:0}
+  .trnote .trpill{margin:0}
   .pe .svgi{width:26px;height:26px;color:var(--accent2);}
   .empty .e .svgi{width:46px;height:46px;color:var(--accent2);}
   .achcard .e .svgi{width:22px;height:22px;color:var(--accent2);}
@@ -1047,8 +1049,8 @@ async function translateEls(items){
 }
 document.addEventListener("click",e=>{
   const pill=e.target.closest&&e.target.closest(".trpill"); if(!pill)return;
+  const el=pill.parentElement; if(!el||!el.dataset.tr)return; // card-bullet notes handle their own pill
   e.preventDefault();e.stopPropagation();
-  const el=pill.parentElement; if(!el||!el.dataset.tr)return;
   const showTr=el.dataset.showing!=="tr"; el.dataset.showing=showTr?"tr":"orig";
   el.innerHTML=esc(showTr?el.dataset.tr:el.dataset.orig)+" "+(showTr?trPill(el.dataset.from):'<span class="trpill nodrag">'+icon("globe")+' '+esc(t("tr_show"))+'</span>');
 },true);
@@ -1234,7 +1236,21 @@ async function fillBullets(r){
   const host=stage.querySelector(`.bul[data-id="${r.id}"]`);
   if(!host||!b.length) return;
   host.innerHTML=b.map(t=>`<li>${esc(t)}</li>`).join("");
-  void translateEls([...host.querySelectorAll("li")].map(el=>({el,text:el.textContent})));
+  void translateBullets(host,b);
+}
+// Card bullets: one pill under the list flips every bullet between translation and original
+async function translateBullets(host,b){
+  const old=host.parentElement&&host.parentElement.querySelector(".trnote"); if(old)old.remove();
+  if(!b.some(x=>needsTranslation(x)))return;
+  const res=await translateTexts(b); if(!document.contains(host))return;
+  const lis=[...host.querySelectorAll("li")]; let from=null,any=false;
+  res.forEach((r,i)=>{if(r&&r.text&&r.text!==b[i]&&lis[i]){lis[i].dataset.orig=b[i];lis[i].dataset.tr=r.text;lis[i].textContent=r.text;from=from||r.from;any=true;}});
+  if(!any)return;
+  const note=document.createElement("div"); note.className="trnote nodrag"; note.dataset.showing="tr"; note.innerHTML=trPill(from);
+  host.insertAdjacentElement("afterend",note);
+  note.addEventListener("click",e=>{e.preventDefault();e.stopPropagation();const showTr=note.dataset.showing!=="tr";note.dataset.showing=showTr?"tr":"orig";
+    lis.forEach(li=>{if(li.dataset.tr)li.textContent=showTr?li.dataset.tr:li.dataset.orig;});
+    note.innerHTML=showTr?trPill(from):'<span class="trpill nodrag">'+icon("globe")+' '+esc(t("tr_show"))+'</span>';});
 }
 
 // ---------- feed (live: every card comes straight from GitHub's API) ----------

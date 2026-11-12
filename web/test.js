@@ -636,7 +636,10 @@ function check(name, ok, detail = "") {
   // Card: bullets + README translated on the deck
   await page.evaluate(() => { bulletCache.clear(); feed = [{ id: 888002, full_name: "tr/demo", name: "demo", html_url: "https://github.com/tr/demo", description: "一个用于管理 GitHub 仓库的命令行工具，支持批量克隆", language: "Go", topics: ["cli"], stargazers_count: 10, forks_count: 1, open_issues_count: 0, pushed_at: new Date().toISOString(), created_at: "2025-01-01T00:00:00Z", owner: { login: "tr", avatar_url: "" }, license: null }]; packActive = null; });
   await page.click('.tab[data-tab="swipe"]'); await page.evaluate(() => renderDeck()); await page.waitForTimeout(900);
-  check("translate: card bullets get translated with a pill", (await page.locator(".card.top .bul li .trpill").count()) >= 1 && /^Translated:/.test(await page.locator(".card.top .bul li").first().innerText()));
+  check("translate: card bullets get translated with one pill under the list", (await page.locator(".card.top .trnote .trpill").count()) === 1 && /^Translated:/.test(await page.locator(".card.top .bul li").first().innerText()));
+  await page.locator(".card.top .trnote .trpill").click(); await page.waitForTimeout(150);
+  check("translate: the card pill flips every bullet back to the original (no card flip)", /仓库/.test(await page.locator(".card.top .bul li").first().innerText()) && (await page.locator(".card.top .bul").count()) === 1);
+  await page.locator(".card.top .trnote .trpill").click(); await page.waitForTimeout(150);
   await page.evaluate(() => flip()); await page.waitForTimeout(900);
   check("translate: README on the card back is translated with a pill", (await page.locator(".card.top #readme .trpill").count()) === 1 && /Translated:/.test(await page.locator(".card.top #readme").innerText()));
   check("translate: README stays a single request (newlines → per-item path)", await page.evaluate(() => __trCalls.some(q => q.indexOf("\n") >= 0)));
