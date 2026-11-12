@@ -98,7 +98,7 @@ function check(name, ok, detail = "") {
     for (const k of Object.keys(S.channelsOn)) S.channelsOn[k] = false;
     await loadFeed();
     let msg = document.querySelector("#stage .empty")?.textContent || "";
-    for (let i = 0; i < 10 && !/No channels on/.test(msg); i++) { await new Promise(r => setTimeout(r, 200)); renderDeck(); msg = document.querySelector("#stage .empty")?.textContent || ""; } // an older in-flight fetch can re-render once; settle
+    for (let i = 0; i < 50 && (fetchingMore || !/No channels on/.test(msg)); i++) { await new Promise(r => setTimeout(r, 200)); if (!fetchingMore) renderDeck(); msg = document.querySelector("#stage .empty")?.textContent || ""; } // wait out an in-flight refill from the previous feed, then settle
     S.channelsOn = saved; save();
     void loadFeed();
     return /No channels on/.test(msg);
@@ -659,6 +659,42 @@ function check(name, ok, detail = "") {
   check("translate: with the toggle off, Stack rows stay in the original language and nothing is sent", (await trRow.locator(".trpill").count()) === 0 && /仓库/.test(await trRow.innerText()) && await page.evaluate(() => __trCalls.length === 0));
   await page.evaluate(() => { S.autoTranslate = true; S.stack = S.stack.filter(s => s.repo.full_name !== "tr/demo"); save(); window.fetch = window.__realFetch3; feed = []; });
   check("translate: helper list of language names covers the 5 UI languages", await page.evaluate(() => ["en","es","fr","de","zh"].every(k => LANG_NAMES[k])));
+
+  // 5i. Search bar + filters (v9.2): search mode, qualifiers, client-side mirror, sheet, persistence, deep link, keyboard guard
+  const mkRepo = (id, full, lang, stars, daysAgo, lic) => ({ id, full_name: full, name: full.split("/")[1], html_url: "https://github.com/" + full, description: "repo " + full, language: lang, topics: ["mcp"], stargazers_count: stars, forks_count: 1, open_issues_count: 0, pushed_at: new Date(Date.now() - daysAgo * 864e5).toISOString(), created_at: "2025-01-01T00:00:00Z", owner: { login: full.split("/")[0], avatar_url: "" }, license: lic ? { spdx_id: lic } : null, archived: false });
+  await page.evaluate((items) => { window.__realFetch4 = window.fetch; window.__searchUrls = [];
+    window.fetch = async (url, init) => { const u = String(url);
+      if (/api\.github\.com\/search\/repositories/.test(u)) { window.__searchUrls.push(u); return new Response(JSON.stringify({ items }), { status: 200, headers: { "content-type": "application/json", "X-RateLimit-Remaining": "29", "X-RateLimit-Limit": "30" } }); }
+      if (/api\.github\.com\/repos\/.*\/readme/.test(u)) return new Response("{}", { status: 404 });
+      return window.__realFetch4(url, init); }; }, [mkRepo(700001, "va/big", "Python", 5000, 2, "MIT"), mkRepo(700002, "va/small", "TypeScript", 120, 90, "Apache-2.0"), mkRepo(700003, "va/old", "Python", 20000, 400, "MIT")]);
+  check("search: filterSuffix/passesFilters defaults (archived:false only; everything passes)", await page.evaluate(() => filterSuffix() === "archived:false" && filterCount() === 0 && passesFilters({ language: "Go", stargazers_count: 1, pushed_at: null, license: null, archived: false }) && !passesFilters({ archived: true })));
+  await page.click('.tab[data-tab="swipe"]'); await page.waitForTimeout(200);
+  await page.fill("#feedSearch", "voice agents"); await page.press("#feedSearch", "Enter"); await page.waitForTimeout(900);
+  check("search: Enter runs a GitHub search with the query + archived:false, 30 per page", await page.evaluate(() => S.searchQ === "voice agents" && __searchUrls.some(u => /q=voice%20agents%20archived%3Afalse/.test(u) && /per_page=30/.test(u) && /sort=updated/.test(u))));
+  check("search: deck shows the results and a search chip replaces the channels", (await page.locator(".card.top .rname").innerText()).startsWith("") && (await page.locator("#searchChip").count()) === 1 && /voice agents/.test(await page.locator("#searchChip").innerText()) && (await page.locator("#channelChips .chchip").count()) === 1);
+  check("search: address bar carries #/search/<q> for sharing", await page.evaluate(() => location.hash === "#/search/voice%20agents"));
+  check("search: typing z / arrows in the box never swipes", await page.evaluate(async () => { const n = feed.length; const inp = document.getElementById("feedSearch"); inp.focus(); inp.dispatchEvent(new KeyboardEvent("keydown", { key: "z", bubbles: true })); inp.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowRight", bubbles: true })); await new Promise(r => setTimeout(r, 100)); inp.blur(); return feed.length === n; }));
+  // Filters sheet: stars 1k+, language Python, sort by stars → qualifiers in the URL + client mirror drops the small repo
+  await page.click("#filterBtn"); await page.waitForTimeout(300);
+  check("filters: sheet opens with language/stars/updated/sort/license/mcp groups", (await page.locator('#aiMenu[data-mode="filters"] .fgroup').count()) === 6);
+  await page.locator('.fchip[data-k="stars"][data-v="1000"]').click();
+  await page.locator('.fchip[data-k="sort"][data-v="stars"]').click();
+  await page.selectOption("#fLang", "Python");
+  await page.evaluate(() => { window.__searchUrls.length = 0; });
+  await page.click("#fApply"); await page.waitForTimeout(900);
+  check("filters: Apply persists and sends language/stars qualifiers with sort=stars", await page.evaluate(() => S.filters.stars === 1000 && S.filters.lang === "Python" && S.filters.sort === "stars" && filterCount() === 3 && __searchUrls.some(u => /language%3APython/.test(u) && /stars%3A%3E%3D1000/.test(u) && /sort=stars&order=desc/.test(u))));
+  check("filters: badge shows 3 and the client-side mirror keeps only matching repos, most stars first", (await page.locator("#filterCount").innerText()) === "3" && await page.evaluate(() => feed.every(r => r.language === "Python" && r.stargazers_count >= 1000) && feed[0].full_name === "va/old"));
+  await page.evaluate(() => { S.filters.pushed = "month"; save(); }); await page.evaluate(() => loadFeed()); await page.waitForTimeout(700);
+  check("filters: 'updated within 30 days' drops the stale repo (client mirror + pushed:> qualifier)", await page.evaluate(() => feed.length === 1 && feed[0].full_name === "va/big" && /pushed%3A%3E/.test(__searchUrls[__searchUrls.length - 1])));
+  await page.reload(); await page.waitForTimeout(1200);
+  check("filters + search persist across reload (badge, chip, box)", await page.evaluate(() => S.filters.stars === 1000 && S.filters.pushed === "month" && S.searchQ === "voice agents" && document.getElementById("feedSearch").value === "voice agents") && (await page.locator("#filterCount").innerText()) === "4" && (await page.locator("#searchChip").count()) === 1);
+  await page.click("#filterBtn"); await page.waitForTimeout(300); await page.click("#fReset"); await page.waitForTimeout(400);
+  check("filters: Reset clears everything", await page.evaluate(() => filterCount() === 0 && !document.getElementById("filterBtn").classList.contains("has")));
+  await page.locator("#searchChip .x").click(); await page.waitForTimeout(500);
+  check("search: ✕ on the chip returns to the channel feed and clears the hash", await page.evaluate(() => S.searchQ === "" && location.hash === "" && document.getElementById("feedSearch").value === "") && (await page.locator("#channelChips .chchip").count()) > 3);
+  await page.evaluate(() => { location.hash = "#/search/rag%20memory"; }); await page.waitForTimeout(600);
+  check("search: #/search/<q> deep link starts a search", await page.evaluate(() => S.searchQ === "rag memory" && document.getElementById("searchChip") !== null));
+  await page.evaluate(() => { setSearch(""); window.fetch = window.__realFetch4; });
 
   // 6. persistence
   await page.reload(); await page.waitForTimeout(1200);
