@@ -1,5 +1,5 @@
-// RepoSwipe extension — background service worker (MV3).
-// Right-click any GitHub repo link (or any GitHub repo page) → "Swipe this repo into RepoSwipe".
+// Skill Swipe extension — background service worker (MV3).
+// Right-click any GitHub repo link (or any GitHub repo page) → "Swipe this repo into Skill Swipe".
 const RS_DEFAULT_ORIGIN = "https://swipe.yeete.ai";
 const RS_RESERVED = new Set(["topics","search","orgs","sponsors","features","settings","site","about","collections","trending","marketplace","apps","login","signup","join","pricing","explore","notifications","issues","pulls","codespaces","new","organizations","enterprise","customer-stories","security","readme","contact","events","nonprofit","team","copilot","mobile","sessions","users","account","dashboard"]);
 function rsParseRepo(url) {
@@ -26,9 +26,9 @@ async function openRoute(kind, full) {
 }
 
 chrome.runtime.onInstalled.addListener(() => {
-  chrome.contextMenus.create({ id: "rs-swipe-link", title: "Swipe this repo into RepoSwipe", contexts: ["link"], targetUrlPatterns: ["https://github.com/*"] });
-  chrome.contextMenus.create({ id: "rs-swipe-page", title: "Swipe this repo into RepoSwipe", contexts: ["page"], documentUrlPatterns: ["https://github.com/*"] });
-  chrome.contextMenus.create({ id: "rs-card-page", title: "See this repo as a RepoSwipe card", contexts: ["page"], documentUrlPatterns: ["https://github.com/*"] });
+  chrome.contextMenus.create({ id: "rs-swipe-link", title: "Swipe this repo into Skill Swipe", contexts: ["link"], targetUrlPatterns: ["https://github.com/*"] });
+  chrome.contextMenus.create({ id: "rs-swipe-page", title: "Swipe this repo into Skill Swipe", contexts: ["page"], documentUrlPatterns: ["https://github.com/*"] });
+  chrome.contextMenus.create({ id: "rs-card-page", title: "See this repo as a Skill Swipe card", contexts: ["page"], documentUrlPatterns: ["https://github.com/*"] });
 });
 
 chrome.contextMenus.onClicked.addListener((info) => {

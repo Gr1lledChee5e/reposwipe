@@ -1,6 +1,6 @@
-// RepoSwipe extension — content script for github.com
+// Skill Swipe extension — content script for github.com
 // Adds a "Swipe" button next to Star/Fork on repository pages. Nothing is read from the page except the repo
-// name in the URL, nothing is stored, and no network requests are made from here: the click just opens RepoSwipe.
+// name in the URL, nothing is stored, and no network requests are made from here: the click just opens Skill Swipe.
 (() => {
   const RESERVED = new Set(["topics","search","orgs","sponsors","features","settings","site","about","collections","trending","marketplace","apps","login","signup","join","pricing","explore","notifications","issues","pulls","codespaces","new","organizations","enterprise","customer-stories","security","readme","contact","events","nonprofit","team","copilot","mobile","sessions","users","account","dashboard"]);
   function repoFromLocation() {
@@ -25,8 +25,8 @@
     const wrap = document.createElement("li");
     wrap.className = "rs-wrap"; wrap.dataset.rsFor = full;
     wrap.innerHTML =
-      `<button type="button" class="rs-btn rs-main" title="Add ${full} to your RepoSwipe Stack">${HEART}<span class="rs-label">Swipe</span></button>` +
-      `<button type="button" class="rs-btn rs-alt" title="See ${full} as a RepoSwipe card">${CARD}</button>`;
+      `<button type="button" class="rs-btn rs-main" title="Add ${full} to your Skill Swipe Stack">${HEART}<span class="rs-label">Swipe</span></button>` +
+      `<button type="button" class="rs-btn rs-alt" title="See ${full} as a Skill Swipe card">${CARD}</button>`;
     wrap.querySelector(".rs-main").addEventListener("click", (e) => { e.preventDefault(); open("add", full); flash(e.currentTarget, "Swiped ✓"); });
     wrap.querySelector(".rs-alt").addEventListener("click", (e) => { e.preventDefault(); open("repo", full); });
     return wrap;

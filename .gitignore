@@ -1,5 +1,6 @@
 web/node_modules/
 web/site/
 web/reposwipe.html
+web/data/
 .DS_Store
 web/src.before-*.html
