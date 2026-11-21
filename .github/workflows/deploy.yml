@@ -5,7 +5,7 @@ on:
     branches: [main]
     paths: ["web/**"]   # app changes deploy automatically; anything else → Actions → Run workflow
   schedule:
-    - cron: "23 * * * *"   # hourly: refresh the snapshot feed (data/*.json) and republish
+    - cron: "23 * * * *"   # hourly: the scouts refresh the feed (data/*.json), the inspector scans it, the site republishes
   workflow_dispatch:
 
 permissions:
@@ -20,6 +20,7 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 55
     defaults: { run: { working-directory: web } }
     steps:
       - uses: actions/checkout@v4
@@ -29,11 +30,20 @@ jobs:
         with: { python-version: "3.12" }
       - name: Install Playwright (test browser)
         run: npm ci && npx playwright install --with-deps chromium
-      - name: Snapshot feed — every channel, the Awesome lists and all 73 packs → data/*.json
+      - name: Safety-scan rules — self-test (the scouts' engine must agree with the shared fixtures)
+        run: python3 tools/scan_selftest.py
+      - name: Scouts + inspector — 10 scouts fetch every channel, the weekly drop, lists and packs; the inspector scans them → data/
         run: python3 snapshot.py
-        env: { GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}", REPOSWIPE_ORIGIN: "https://swipe.yeete.ai" }
+        # SNAPSHOT_TOKEN (optional repo secret: a read-only token on this same account) lifts the API allowance from
+        # 1,000 to 5,000 requests/hour, so more repos get deep-scanned per run. Without it GITHUB_TOKEN is used.
+        env: { GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}", SNAPSHOT_TOKEN: "${{ secrets.SNAPSHOT_TOKEN }}", REPOSWIPE_ORIGIN: "https://swipe.yeete.ai" }
+        timeout-minutes: 35
         continue-on-error: true   # a GitHub hiccup keeps the previously published data; the app also falls back to live
-      - name: Build reposwipe.html + static site (OG stubs for 73 packs, privacy, sitemap, CNAME, data/)
+      - name: Keep the published feed if the scouts could not finish
+        run: test -f data/meta.json || python3 snapshot.py --mirror
+        env: { REPOSWIPE_ORIGIN: "https://swipe.yeete.ai" }
+        continue-on-error: true
+      - name: Build reposwipe.html + static site (share pages for 100 packs + the weekly drop, privacy, sitemap, CNAME, data/)
         run: python3 build.py --site
         env: { REPOSWIPE_ORIGIN: "https://swipe.yeete.ai" }
       - name: End-to-end suite (must be green to deploy)
