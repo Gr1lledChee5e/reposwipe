@@ -35,6 +35,11 @@ if SITE:
     import shutil
     shutil.copy(os.path.join(HERE, "privacy.html"), os.path.join(site, "privacy.html"))
     shutil.copy(os.path.join(HERE, "terms.html"), os.path.join(site, "terms.html"))
+    shutil.copy(os.path.join(HERE, "manifest.webmanifest"), os.path.join(site, "manifest.webmanifest"))
+    shutil.copy(os.path.join(HERE, "sw.js"), os.path.join(site, "sw.js"))
+    pwa_dir = os.path.join(HERE, "pwa")
+    if os.path.isdir(pwa_dir):
+        shutil.copytree(pwa_dir, os.path.join(site, "pwa"), dirs_exist_ok=True)
     os.makedirs(os.path.join(site, "og"), exist_ok=True)
     for f in ("app.png", "pack.png", "weekly.png", "icon512.png"):
         shutil.copy(os.path.join(HERE, "og", f), os.path.join(site, "og", f))

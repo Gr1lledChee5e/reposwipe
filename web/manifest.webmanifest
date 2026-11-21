@@ -1,0 +1,29 @@
+{
+  "name": "Skill Swipe",
+  "short_name": "Skill Swipe",
+  "description": "Tinder for GitHub repos — swipe right to keep it, build your AI toolkit. Safety-checked by scouts, 100 job packs, send to Claude, ChatGPT, Perplexity or Grok.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#040B07",
+  "theme_color": "#1AAC62",
+  "lang": "en",
+  "categories": ["developer", "productivity", "utilities"],
+  "icons": [
+    { "src": "/pwa/icon-192.png",          "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/pwa/icon-512.png",          "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/pwa/icon-192-maskable.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "/pwa/icon-512-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "screenshots": [
+    { "src": "/og/app.png",    "sizes": "1200x630", "type": "image/png", "form_factor": "wide", "label": "Swipe GitHub. Build your AI kit." },
+    { "src": "/og/pack.png",   "sizes": "1200x630", "type": "image/png", "form_factor": "wide", "label": "100 starter packs by job" },
+    { "src": "/og/weekly.png", "sizes": "1200x630", "type": "image/png", "form_factor": "wide", "label": "This Week's Drop — safety-checked" }
+  ],
+  "shortcuts": [
+    { "name": "Packs",           "short_name": "Packs",   "url": "/#/packs" },
+    { "name": "This Week's Drop","short_name": "Weekly",  "url": "/pack/weekly/" },
+    { "name": "My Stack",        "short_name": "Stack",   "url": "/#/stack" }
+  ]
+}

@@ -7,8 +7,17 @@
 <meta name="description" content="Tinder for GitHub repos. Swipe through MCP servers, Claude tools, and AI agents — build your AI toolkit one match at a time.">
 <meta property="og:type" content="website"><meta property="og:site_name" content="Skill Swipe"><meta property="og:title" content="Skill Swipe — swipe GitHub, build your AI kit"><meta property="og:description" content="Every card is a live GitHub repo. Swipe right to keep it. 100 job-based starter packs, send any repo to Claude, ChatGPT or Perplexity, turn repos into skills."><meta property="og:url" content="https://swipe.yeete.ai/"><meta property="og:image" content="https://swipe.yeete.ai/og/app.png">
 <meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Skill Swipe — swipe GitHub, build your AI kit"><meta name="twitter:description" content="Every card is a live GitHub repo. Swipe right to keep it. 100 job-based starter packs, send any repo to your AI."><meta name="twitter:image" content="https://swipe.yeete.ai/og/app.png">
-<meta name="theme-color" content="#040B07">
-<link rel="apple-touch-icon" href="https://swipe.yeete.ai/og/icon512.png">
+<meta name="theme-color" content="#040B07" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#1AAC62">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Skill Swipe">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/pwa/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/pwa/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/pwa/icon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="/pwa/icon-512.png">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23064E3B'/><path transform='translate(14,15) scale(3)' d='M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21.2l7.8-7.8 1-1a5.5 5.5 0 0 0 0-7.8z' fill='white'/></svg>">
 <style>
   :root{
@@ -3407,6 +3416,11 @@ addEventListener("hashchange",()=>{void handleRoute(location.hash);});
 // the tab icon is the emblem too (taken from the one embedded copy in the stylesheet)
 try{const bu=getComputedStyle(document.querySelector(".brandlogo")).backgroundImage.replace(/^url\(["']?|["']?\)$/g,"");
   if(bu.indexOf("data:image")===0){const fl=document.querySelector('link[rel="icon"]');if(fl){fl.type="image/webp";fl.href=bu;}}}catch(e){}
+
+// PWA service worker — registers on https, no-op on file:// (tests) and in the native shell.
+if("serviceWorker" in navigator && location.protocol === "https:" && !NATIVE){
+  window.addEventListener("load", () => { navigator.serviceWorker.register("/sw.js").catch(()=>{}); });
+}
 
 // boot
 (async()=>{
