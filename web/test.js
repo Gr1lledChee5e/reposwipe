@@ -684,7 +684,17 @@ function check(name, ok, detail = "") {
   check("search: typing z / arrows in the box never swipes", await page.evaluate(async () => { const n = feed.length; const inp = document.getElementById("feedSearch"); inp.focus(); inp.dispatchEvent(new KeyboardEvent("keydown", { key: "z", bubbles: true })); inp.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowRight", bubbles: true })); await new Promise(r => setTimeout(r, 100)); inp.blur(); return feed.length === n; }));
   // Filters sheet: stars 1k+, language Python, sort by stars → qualifiers in the URL + client mirror drops the small repo
   await page.click("#filterBtn"); await page.waitForTimeout(300);
-  check("filters: sheet opens with language/stars/updated/sort/license/mcp groups", (await page.locator('#aiMenu[data-mode="filters"] .fgroup').count()) === 6);
+  check("filters: sheet opens with channels/language/stars/updated/sort/license/mcp groups", (await page.locator('#aiMenu[data-mode="filters"] .fgroup').count()) === 7);
+  check("filters: Channels group has one chip per live channel, mirrors S.channelsOn", await page.evaluate(() => { const chips = [...document.querySelectorAll('#aiMenu[data-mode="filters"] .chfchip')]; return chips.length >= 1 && chips.length === (typeof allChannels === "function" ? allChannels().length : chips.length) && chips.every(c => c.classList.contains("on") === !!S.channelsOn[c.dataset.ch]); }));
+  // Toggle a channel in the filter sheet and confirm Apply commits to S.channelsOn + refreshes the top chip row
+  const chBefore = await page.evaluate(() => !!S.channelsOn.skills);
+  await page.locator('#aiMenu[data-mode="filters"] .chfchip[data-ch="skills"]').click();
+  await page.locator('#aiMenu[data-mode="filters"] #fApply').click();
+  await page.waitForTimeout(400);
+  check("filters: toggling a channel chip + Apply flips S.channelsOn", await page.evaluate((chBefore) => S.channelsOn.skills !== chBefore, chBefore));
+  // Restore for subsequent tests and re-open the sheet (Apply closed it)
+  await page.evaluate(() => { S.channelsOn.skills = true; save(); if (typeof renderChips === "function") renderChips(); });
+  await page.click("#filterBtn"); await page.waitForTimeout(300);
   await page.locator('.fchip[data-k="stars"][data-v="1000"]').click();
   await page.locator('.fchip[data-k="sort"][data-v="stars"]').click();
   await page.selectOption("#fLang", "Python");

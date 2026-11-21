@@ -79,6 +79,11 @@
   .fchips{display:flex; flex-wrap:wrap; gap:6px;}
   .fchip{font-size:11.5px; font-weight:700; padding:7px 12px; border-radius:999px; background:rgba(3,9,6,.5); color:var(--muted); border:1px solid var(--stroke); cursor:pointer;}
   .fchip.on{background:linear-gradient(135deg,rgba(26,172,98,.35),rgba(43,158,143,.25)); color:#BDE6D6; border-color:rgba(55,219,157,.6);}
+  .chfchip{display:inline-flex; align-items:center; gap:5px;}
+  .chfchip svg{color:currentColor; opacity:.9;}
+  .fhint{font-size:10px; letter-spacing:0; color:var(--muted); font-weight:600; text-transform:none; margin-left:4px;}
+  .minibtn{background:none; color:var(--muted); font-size:11px; font-weight:700; padding:4px 10px; border-radius:999px; border:1px solid var(--stroke); cursor:pointer;}
+  .minibtn:hover{color:var(--accent2); border-color:rgba(55,219,157,.4);}
   .fsel{width:100%; box-sizing:border-box;}
   .fsheet{max-height:82vh; overflow-y:auto;}
   .addinput{flex-shrink:0; width:150px; background:rgba(3,9,6,.5); border:1px solid var(--stroke); border-radius:999px; color:var(--text); font-size:11.5px; font-weight:600; padding:7px 13px; outline:none; display:none;}
@@ -847,6 +852,12 @@ Object.assign(I18N.es,{foot_privacy:"Privacidad",foot_terms:"Términos"});
 Object.assign(I18N.fr,{foot_privacy:"Confidentialité",foot_terms:"Conditions"});
 Object.assign(I18N.de,{foot_privacy:"Datenschutz",foot_terms:"Nutzungsbedingungen"});
 Object.assign(I18N.zh,{foot_privacy:"隐私",foot_terms:"条款"});
+// v12.6: channels inside the Filters dropdown
+Object.assign(I18N.en,{f_channels:"Channels",f_channels_hint:"turn on or off",f_all:"All on",f_none:"All off"});
+Object.assign(I18N.es,{f_channels:"Canales",f_channels_hint:"activar o desactivar",f_all:"Todos sí",f_none:"Todos no"});
+Object.assign(I18N.fr,{f_channels:"Canaux",f_channels_hint:"activer ou désactiver",f_all:"Tous activés",f_none:"Tous désactivés"});
+Object.assign(I18N.de,{f_channels:"Kanäle",f_channels_hint:"an- oder abschalten",f_all:"Alle an",f_none:"Alle aus"});
+Object.assign(I18N.zh,{f_channels:"频道",f_channels_hint:"开启或关闭",f_all:"全部开",f_none:"全部关"});
 // v12.3: star swipe + MCP tiles translations
 Object.assign(I18N.es,{"sec_star":"ME GUSTA = ESTRELLA","star_gh":"Estrella en GitHub","star_gh_sub":"Un deslizamiento a la derecha también le da estrella en tu GitHub","star_gh_need":"Requiere un permiso de GitHub — toca para permitir","star_gh_offa":"También dar estrella en GitHub","star_send":"Enviar a {ai}","star_send_sub":"Un deslizamiento a la derecha también abre {ai} con el repo","star_starring":"Dando estrella en GitHub…","star_starred":"★ Con estrella en GitHub","star_star_fail":"No se pudo dar estrella en GitHub","star_already":"Ya tenía estrella","sec_mcp_use":"USAR SKILL SWIPE CON TU IA","mcp_use_sub":"Deja que tu IA explore tu Colección y abra repos desde cualquier chat — toca para instalar","mcp_claude_desktop":"Claude Desktop","mcp_claude_code":"Claude Code","mcp_chatgpt":"ChatGPT","mcp_cursor":"Cursor"});
 Object.assign(I18N.fr,{"sec_star":"J'AIME = ÉTOILE","star_gh":"Étoile sur GitHub","star_gh_sub":"Un swipe à droite met aussi une étoile sur ton GitHub","star_gh_need":"Nécessite une autorisation GitHub — touche pour autoriser","star_gh_offa":"Aussi mettre une étoile sur GitHub","star_send":"Envoyer à {ai}","star_send_sub":"Un swipe à droite ouvre aussi {ai} avec le dépôt","star_starring":"Étoile sur GitHub…","star_starred":"★ Étoile mise sur GitHub","star_star_fail":"Impossible de mettre l'étoile sur GitHub","star_already":"Déjà en étoile","sec_mcp_use":"UTILISER SKILL SWIPE AVEC TON IA","mcp_use_sub":"Laisse ton IA parcourir ta Collection et ouvrir des dépôts depuis n'importe quel chat — touche pour installer","mcp_claude_desktop":"Claude Desktop","mcp_claude_code":"Claude Code","mcp_chatgpt":"ChatGPT","mcp_cursor":"Cursor"});
@@ -1777,10 +1788,16 @@ function updateFilterBtn(){const n=filterCount(),b=$("filterBtn");if(!b)return;b
 function openFilterSheet(){
   closeAiMenu();
   const f={...FILTER_DEFAULTS,...(S.filters||{})};
+  const chans=allChannels(); // same set as the top chip row
+  const chanOn={}; for(const c of chans)chanOn[c.key]=!!S.channelsOn[c.key]; // local draft, committed on Apply
   const m=document.createElement("div"); m.id="aiMenu"; m.dataset.mode="filters";
   const chips=(k,opts)=>`<div class="fchips">${opts.map(([v,l])=>`<button class="fchip${String(f[k])===String(v)?" on":""}" data-k="${k}" data-v="${esc(String(v))}">${esc(l)}</button>`).join("")}</div>`;
+  const chanChips=`<div class="fchips">${chans.map(c=>`<button class="fchip chfchip${chanOn[c.key]?" on":""}" data-ch="${esc(c.key)}">${icon(c.ic||"sparkle")} <span>${esc(chanLabel(c))}</span></button>`).join("")}</div>`;
   m.innerHTML=`<div class="aisheet fsheet">
     <div class="aihead">${icon("sliders")} ${esc(t("filters"))}</div>
+    <div class="fgroup"><div class="flabel">${esc(t("f_channels"))} <span class="fhint">${esc(t("f_channels_hint"))}</span></div>${chanChips}
+      <div class="btnrow" style="padding:4px 0 0;gap:6px"><button class="minibtn" id="chAll">${esc(t("f_all"))}</button><button class="minibtn" id="chNone">${esc(t("f_none"))}</button></div>
+    </div>
     <div class="fgroup"><div class="flabel">${esc(t("f_language"))}</div><select class="langsel fsel" id="fLang"><option value="">${esc(t("f_any"))}</option>${FILTER_LANGS.map(l=>`<option value="${esc(l)}"${f.lang===l?" selected":""}>${esc(l)}</option>`).join("")}</select></div>
     <div class="fgroup"><div class="flabel">${esc(t("f_stars"))}</div>${chips("stars",[[0,t("f_any")],[100,"100+"],[1000,"1k+"],[10000,"10k+"]])}</div>
     <div class="fgroup"><div class="flabel">${esc(t("f_updated"))}</div>${chips("pushed",[["",t("f_any")],["week",t("f_week")],["month",t("f_month")],["year",t("f_year")]])}</div>
@@ -1789,10 +1806,15 @@ function openFilterSheet(){
     <div class="fgroup">${chips("mcp",[[false,t("f_any")],[true,t("f_mcp")]])}</div>
     <div class="btnrow" style="padding:10px 18px 16px"><button class="gbtn" id="fApply">${esc(t("f_apply"))}</button><button class="gbtn alt" id="fReset">${esc(t("f_reset"))}</button></div>
   </div>`;
+  const setAllChans=(on)=>{for(const k in chanOn)chanOn[k]=on;m.querySelectorAll(".chfchip").forEach(x=>x.classList.toggle("on",on));};
   m.addEventListener("click",e=>{
+    const cc=e.target.closest&&e.target.closest(".chfchip");
+    if(cc){const k=cc.dataset.ch; chanOn[k]=!chanOn[k]; cc.classList.toggle("on",chanOn[k]);return;}
     const c=e.target.closest&&e.target.closest(".fchip");
     if(c){const k=c.dataset.k,v=c.dataset.v; f[k]=k==="stars"?+v:k==="mcp"?v==="true":v; m.querySelectorAll(`.fchip[data-k="${k}"]`).forEach(x=>x.classList.toggle("on",x===c));return;}
-    if(e.target.closest&&e.target.closest("#fApply")){f.lang=m.querySelector("#fLang").value;f.license=m.querySelector("#fLicense").value;S.filters=f;save();closeAiMenu();updateFilterBtn();loadFeed();return;}
+    if(e.target.closest&&e.target.closest("#chAll")){setAllChans(true);return;}
+    if(e.target.closest&&e.target.closest("#chNone")){setAllChans(false);return;}
+    if(e.target.closest&&e.target.closest("#fApply")){f.lang=m.querySelector("#fLang").value;f.license=m.querySelector("#fLicense").value;S.filters=f;for(const k in chanOn)S.channelsOn[k]=chanOn[k];save();closeAiMenu();updateFilterBtn();renderChips();loadFeed();return;}
     if(e.target.closest&&e.target.closest("#fReset")){S.filters={...FILTER_DEFAULTS};save();closeAiMenu();updateFilterBtn();loadFeed();return;}
     if(e.target===m)closeAiMenu();
   });
