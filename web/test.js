@@ -45,6 +45,13 @@ function check(name, ok, detail = "") {
   check("bullets: sentence fallback works", bullets2.length >= 1 && /converts markdown/.test(bullets2[0]), JSON.stringify(bullets2).slice(0, 80));
   const bullets3 = await page.evaluate(() => parseBullets("", "the description"));
   check("bullets: description last-resort", bullets3.length === 1 && bullets3[0] === "the description");
+  // v12.7: shortenBullet keeps bullets to one short clause — drops "Label:" prefix, keeps first sentence, caps at ~90 chars
+  const s1 = await page.evaluate(() => shortenBullet("Lifespans are different: graph.json is the state of the architecture diagram, which is rolled back with the migration layer."));
+  check("shortenBullet: drops 'Label:' prefix + first sentence + ≤90 chars", s1.length <= 90 && !s1.startsWith("Lifespans") && /architecture diagram/i.test(s1), s1);
+  const s2 = await page.evaluate(() => shortenBullet("A short bullet."));
+  check("shortenBullet: leaves short bullets alone", s2 === "A short bullet.");
+  const s3 = await page.evaluate(() => shortenBullet("One hundred and ninety two characters of fluff with no sentence boundary at all so the shortener has to cut cleanly at a space near the cap without a trailing comma."));
+  check("shortenBullet: caps long fluff on a word boundary with an ellipsis", s3.length <= 91 && /…$/.test(s3) && !/\s…$/.test(s3) && !/[,;:—–-]…$/.test(s3));
 
   // 1c. live supply engine units
   const links = await page.evaluate(() => parseRepoLinks(

@@ -111,7 +111,7 @@
   .rname{font-size:25px; font-weight:900; letter-spacing:-.6px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
   .rowner{font-size:13px; font-weight:600; color:var(--accent2); margin-top:1px;}
   .bul{list-style:none; margin-top:9px; display:flex; flex-direction:column; gap:5px; overflow:hidden; min-height:0;}
-  .bul li{font-size:12.5px; line-height:1.45; color:var(--text2); padding-left:15px; position:relative; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;}
+  .bul li{font-size:12.5px; line-height:1.45; color:var(--text2); padding-left:15px; position:relative; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; max-height:calc(1.45em * 2); word-break:break-word;}
   .bul li::before{content:"▸"; color:var(--accent2); position:absolute; left:0; top:0;}
   .bul li.ph{color:var(--muted); font-style:italic;}
   .tagrow{display:flex; flex-wrap:wrap; gap:5px; margin-top:10px;}
@@ -1352,29 +1352,54 @@ const FX=(function(){
 
 // ---------- "what it does" bullets (extracted live from each repo's README) ----------
 const bulletCache=new Map();
+// Trim a bullet to a short, single-line clause. Drops leading "Label:" prefixes, keeps the first sentence,
+// hard-caps at ~90 chars on a word boundary. Called everywhere a bullet is about to hit the UI (README mining,
+// description fallback, translated text) so phones always see one punchy line instead of a wrapped paragraph.
+function shortenBullet(s){
+  if(!s) return "";
+  s = String(s).replace(/\s+/g," ").trim();
+  // "Short label: the real content" → keep the content when the label is short and the content is substantial
+  const colon = s.indexOf(": ");
+  if(colon > 0 && colon <= 28 && s.length - colon - 2 >= 20){
+    const tail = s.slice(colon + 2).trim();
+    if(tail) s = tail.charAt(0).toUpperCase() + tail.slice(1);
+  }
+  // Keep only the first sentence — split on ". ", "! ", "? ", "; " or ASCII-safe CJK equivalents
+  const stop = s.search(/[.!?;。！？；](?:\s|$)/);
+  if(stop > 20 && stop < s.length - 1) s = s.slice(0, stop + 1);
+  // Hard cap at 90 chars, cut at a word boundary
+  const MAX = 90;
+  if(s.length > MAX){
+    let cut = s.lastIndexOf(" ", MAX - 1);
+    if(cut < MAX - 25) cut = MAX - 1; // no nearby space → just chop
+    s = s.slice(0, cut).replace(/[\s,;:—–-]+$/,"") + "…";
+  }
+  return s;
+}
 function parseBullets(md, desc){
-  const out=[];
+  const out=[], seen=new Set();
+  const add=(t)=>{const s=shortenBullet(t); if(s && s.length>=15 && !seen.has(s.toLowerCase())){seen.add(s.toLowerCase()); out.push(s);}};
   const clean=String(md).replace(/```[\s\S]*?```/g,"").replace(/<[^>]+>/g," ");
   // 1) real bullet lines from the README (prefer the author's own feature list)
   for(const raw of clean.split("\n")){
     const m=raw.match(/^\s*[-*+•]\s+(.{8,})/);
     if(!m) continue;
     let t=m[1].replace(/!\[[^\]]*\]\([^)]*\)/g,"").replace(/\[([^\]]*)\]\([^)]*\)/g,"$1").replace(/[*_`#]/g,"").replace(/\s+/g," ").trim();
-    if(t.length<20||t.length>170) continue;
+    if(t.length<20||t.length>280) continue;
     if(/^https?:\/\//i.test(t)) continue;
     if(/license|contributing|star history|sponsor|badge/i.test(t.slice(0,20))) continue;
-    if(!out.includes(t)) out.push(t);
+    add(t);
     if(out.length>=5) break;
   }
   // 2) not enough? fall back to the opening sentences of the README
   if(out.length<2){
     const text=clean.replace(/^#.*$/gm," ").replace(/!\[[^\]]*\]\([^)]*\)/g,"").replace(/\[([^\]]*)\]\([^)]*\)/g,"$1").replace(/[*_`>#|]/g," ").replace(/\s+/g," ");
     // no lookbehind — older Safari crashes at parse time on those patterns
-    const sentences=(text.match(/[^.!?]+[.!?]+/g)||[]).map(s=>s.trim()).filter(s=>s.length>=30&&s.length<=190&&/[a-zA-Z]{4}/.test(s)&&!/^https?:/i.test(s));
-    for(const s of sentences){ if(out.length>=4)break; if(!out.includes(s)) out.push(s); }
+    const sentences=(text.match(/[^.!?]+[.!?]+/g)||[]).map(s=>s.trim()).filter(s=>s.length>=30&&s.length<=260&&/[a-zA-Z]{4}/.test(s)&&!/^https?:/i.test(s));
+    for(const s of sentences){ if(out.length>=4)break; add(s); }
   }
   // 3) still nothing? use the repo description
-  if(out.length===0&&desc) out.push(desc);
+  if(out.length===0&&desc) add(desc);
   return out.slice(0,5);
 }
 async function getBullets(r){
@@ -1406,7 +1431,7 @@ async function translateBullets(host,b){
   if(!b.some(x=>needsTranslation(x)))return;
   const res=await translateTexts(b); if(!document.contains(host))return;
   const lis=[...host.querySelectorAll("li")]; let from=null,any=false;
-  res.forEach((r,i)=>{if(r&&r.text&&r.text!==b[i]&&lis[i]){lis[i].dataset.orig=b[i];lis[i].dataset.tr=r.text;lis[i].textContent=r.text;from=from||r.from;any=true;}});
+  res.forEach((r,i)=>{if(r&&r.text&&r.text!==b[i]&&lis[i]){const tr=shortenBullet(r.text); lis[i].dataset.orig=b[i];lis[i].dataset.tr=tr;lis[i].textContent=tr;from=from||r.from;any=true;}});
   if(!any)return;
   const note=document.createElement("div"); note.className="trnote nodrag"; note.dataset.showing="tr"; note.innerHTML=trPill(from);
   host.insertAdjacentElement("afterend",note);
